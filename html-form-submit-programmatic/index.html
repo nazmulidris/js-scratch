@@ -17,33 +17,55 @@
 <html>
 <body>
 
-<form onsubmit="return processForm(day, month, year, length, size, tour)">
-  The day of the month must be entered as a number (ex: 1,22)
-  <input type="text" name="day"><br>
+<form onsubmit="return processForm(day, month, year, length, size, tour, own_bike)">
+  <label>
+    The day of the month must be entered as a number (ex: 1,22)
+    <input type="text" name="day">
+  </label><br>
 
-  The month of the year must be entered as a number (ex: Jan.=1, etc.)
-  <input type="text" name="month"><br>
+  <label>
+    The month of the year must be entered as a number (ex: Jan.=1, etc.)
+    <input type="text" name="month">
+  </label><br>
 
-  The year must be entered as a 4 digit number (ex: 2008, 2017)
-  <input type="text" name="year"><br>
+  <label>
+    The year must be entered as a 4 digit number (ex: 2008, 2017)
+    <input type="text" name="year">
+  </label><br>
 
-  Please Choose a tour-length, in accordance with the chart below:
-  <input type="text" name="length"><br>
+  <label>
+    Please Choose a tour-length, in accordance with the chart below:
+    <input type="text" name="length">
+  </label><br>
 
-  How many people will be in your group? (No More than 10 allowed!)
-  <input type="text" name="size"><br>
+  <label>
+    How many people will be in your group? (No More than 10 allowed!)
+    <input type="text" name="size">
+  </label><br>
+
+  <label>Bring your own bike
+    <input type="checkbox" name="own_bike">
+  </label><br>
 
   Please select a tour:<br>
-  <input type="radio" name="tour" value="Gardiner Lake">
 
-  Gardiner Lake<br>
-  <input type="radio" name="tour" value="Hellroaring Plateau">
+  <label>
+    <input type="radio" name="tour" value="Gardiner Lake">
+    Gardiner Lake<br>
+  </label>
 
-  Hellroaring Plateau<br>
-  <input type="radio" name="tour" value="The Beaten Path">
+  <label>
+    <input type="radio" name="tour" value="Hellroaring Plateau">
+    Hellroaring Plateau<br>
+  </label>
 
-  The Beaten Path<br>
+  <label>
+    <input type="radio" name="tour" value="The Beaten Path">
+    The Beaten Path<br>
+  </label>
+
   <input type="submit" value="Submit">
+
 </form>
 
 <script src="script.js"></script>
