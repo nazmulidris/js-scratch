@@ -15,14 +15,14 @@
  */
 
 body {
-    display: grid;
-    grid-template-areas: "select  result";
+  display: grid;
+  grid-template-areas: "select  result";
 }
 
 select {
-    grid-area: select;
+  grid-area: select;
 }
 
 .result {
-    grid-area: result;
+  grid-area: result;
 }

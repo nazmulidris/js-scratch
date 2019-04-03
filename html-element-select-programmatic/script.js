@@ -14,32 +14,40 @@
  * limitations under the License.
  */
 
-const selectElement = document.querySelector('.ice-cream');
+// Helper methods.
+const getElement = (selector) => document.querySelector(selector);
 
-selectElement.addEventListener(
+const Selector = {
+  'ice-cream-select': 'select[name=ice_cream]',
+  'result-div': '.result',
+};
+
+// Add change event listener to the select element.
+getElement(Selector['ice-cream-select']).addEventListener(
     'change',
     (event) => {
-        const result = document.querySelector('.result');
-        result.textContent = `You like ${event.target.value}`;
+      const value = event.target.value;
+      getElement(Selector['result-div']).textContent = `You like ${value}`;
     });
 
 /**
  * Programmatically change the option that's selected in the HTML select
  * element. Also fires a `change` event on the select element.
- * @param selectElementSelector The selector for the HTML select element.
+ * @param selector The selector for the HTML select element.
  * @param optionValue Try and pick this option if it exists.
  */
 const setSelectedIndexAndFireChangeEvent =
-    (selectElementSelector, optionValue) => {
-        const selectElement =
-            document.querySelector(selectElementSelector);
-        for (let i = 0; i < selectElement.options.length; i++) {
-            if (selectElement.options[i].text === optionValue) {
-                selectElement.options[i].selected = true;
-                selectElement.dispatchEvent(new Event('change'));
-                return;
-            }
+    (selector, optionValue) => {
+      const selectElement = getElement(selector);
+      for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].value === optionValue) {
+          selectElement.options[i].selected = true;
+          selectElement.dispatchEvent(new Event('change'));
+          return;
         }
+      }
     };
 
-setSelectedIndexAndFireChangeEvent('sardine');
+// Change the default select value & fire change event.
+setSelectedIndexAndFireChangeEvent(
+    Selector['ice-cream-select'], 'sardine');
