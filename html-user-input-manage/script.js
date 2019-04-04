@@ -16,7 +16,7 @@
 
 /**
  * Create 3 POJOs containing user input from the HTML, based on the containers
- * (divs w/ data-scope attributes 'page', 'map-options', 'layout').
+ * (divs w/ data-scope attributes 'scope1', 'scope2', 'scope3').
  */
 const generatePojosFromUi = () => {
   const pojos = {};
@@ -65,8 +65,7 @@ const getUserInputsForScope = (div) => {
 };
 
 /**
- * Iterate thru all the containers (divs w/ data-scope attributes 'page',
- * 'map-options', 'layout') and attach change listeners to the:
+ * Iterate thru all the containers and attach change listeners to the:
  * - input text and checkbox elements
  * - select elements.
  *
