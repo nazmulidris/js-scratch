@@ -1,0 +1,103 @@
+<!--
+  ~ Copyright 2019 Nazmul Idris All rights reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html lang="en">
+
+<body>
+
+<div data-scope="pageOptions">
+  <label><input type="checkbox" name="isRtl"> RTL</label>
+  <label><input type="checkbox" name="isDebug"> Debug</label>
+</div>
+
+<div data-scope="mapViewOptions">
+  <label>Breadth (m): <input type="number" value="0" min="0" step="50"
+                             name="locationRestrictionBreadth"></label>
+
+  <label><input type="checkbox" name="placePopoverView"> Place Popover View</label>
+
+  <label>
+    Location:
+    <select name="latLng">
+      <option value="37.7883636,-122.4430868">SF</option>
+      <option value="-33.8666199,151.1958527">Sydney</option>
+      <option value="48.8894895,2.242825">Paris</option>
+      <option value="47.649384,-122.3582595">Seattle</option>
+      <option value="7.8880802,98.2937285">Patong</option>
+    </select>
+  </label>
+
+  <label>
+    Travel Mode:
+    <select name="directionsTravelMode">
+      <option value="">None</option>
+      <option value="DRIVING">Driving</option>
+      <option value="WALKING">Walking</option>
+      <option value="BICYCLING">Bicycling</option>
+      <option value="TRANSIT">Transit</option>
+    </select>
+  </label>
+
+  <button name="hide">Hide Place Sheet</button>
+
+  <label>GCIDs: <input type="text" name="gcids"></label>
+</div>
+
+<div data-scope="layoutOptions">
+
+  <label>
+    Layout:
+    <select name="layout">
+      <option>Layout1</option>
+      <option>Layout2</option>
+      <option>Layout3</option>
+    </select>
+  </label>
+
+  <div data-layout="Layout1">
+    <label>
+      <input type="checkbox" name="flipHorizontal">
+      Flip Horizontal
+    </label>
+    <label>
+      <input type="checkbox" name="persistPlacePicker">
+      Persist Place Picker
+    </label>
+  </div>
+
+  <div data-layout="Layout2">
+    <label>
+      <input type="checkbox" name="flipHorizontal">
+      Flip Horizontal
+    </label>
+  </div>
+
+  <div data-layout="Layout3">
+    <label>
+      <input type="checkbox" name="flipHorizontal">
+      Flip Horizontal
+    </label>
+  </div>
+
+</div>
+
+<div id="map"></div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
