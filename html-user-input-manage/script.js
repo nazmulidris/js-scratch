@@ -23,7 +23,7 @@ const generatePojosFromUi = () => {
   const divs = document.querySelectorAll('div[data-scope]');
   for (const div of divs) {
     const scopeName = div.dataset.scope;
-    pojos[scopeName] = getUserInputsForScope(div);
+    pojos[scopeName] = getUserInputsForScope(scopeName, div);
   }
   console.log('pojos:', JSON.stringify(pojos, undefined, 2));
   return pojos;
@@ -38,19 +38,19 @@ const generatePojosFromUi = () => {
  *
  * @param div
  */
-const getUserInputsForScope = (div) => {
+const getUserInputsForScope = (scopeName, div) => {
   const pojo = {};
-
+  
   const inputs = div.querySelectorAll('input, select');
-
+  
   for (const userInput of inputs) {
     const key = userInput.name;
     let value = null;
     const type = userInput.type;
-
+    
     // console.log(
     //     `input: type: ${type}, name:${key}, value: ${value}`);
-
+    
     switch (type) {
       case 'checkbox':
         value = userInput.checked;
@@ -60,7 +60,7 @@ const getUserInputsForScope = (div) => {
     }
     pojo[key] = value;
   }
-
+  
   return pojo;
 };
 
@@ -73,7 +73,7 @@ const getUserInputsForScope = (div) => {
  * which call generatePojosFromUi().
  */
 const attachListenersToUi = () => {
-  const attachListenersToUiForScope = (div) => {
+  const attachListenersToUiForScope = (scopeName, div) => {
     const inputs = div.querySelectorAll('input, select');
     for (const userInput of inputs) {
       userInput.addEventListener('change', () => {
@@ -82,15 +82,28 @@ const attachListenersToUi = () => {
       })
     }
   };
-
+  
   const divs = document.querySelectorAll('div[data-scope]');
   for (const div of divs) {
-    attachListenersToUiForScope(div);
+    const scopeName = div.dataset.scope;
+    attachListenersToUiForScope(scopeName, div);
   }
 };
 
-const attachChangeListenerToDropdown=()=>{
+/**
+ * Show/hide divs w/ data attribute 'data-dropdown' based on the value of the
+ * Dropdown select element.
+ */
+const attachChangeListenerForScope3Dropdown = () => {
   // TODO
+  document.querySelector(
+    'body > div:nth-child(3) > label > select')
+          .addEventListener(
+            'change',
+            () => {
+              alert('do something more on layout change');
+            }
+          );
 };
 
 /**
@@ -107,12 +120,7 @@ const applyPojosToUi = (pojos) => {
 const pojos = generatePojosFromUi();
 
 attachListenersToUi();
-
-document.querySelector(
-    'body > div:nth-child(3) > label > select').addEventListener('change',
-    () => {
-      alert('do something more on layout change');
-    });
+attachChangeListenerForScope3Dropdown();
 
 const pagediv = document.querySelector('div[data-scope="page"');
 const layoutdiv = document.querySelector('div[data-scope="layout"');
