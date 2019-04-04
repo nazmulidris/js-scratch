@@ -25,7 +25,7 @@ const generatePojosFromUi = () => {
     const scopeName = div.dataset.scope;
     pojos[scopeName] = getUserInputsForScope(div);
   }
-  // console.log('pojos:', pojos);
+  console.log('pojos:', JSON.stringify(pojos, undefined, 2));
   return pojos;
 };
 
@@ -48,8 +48,8 @@ const getUserInputsForScope = (div) => {
     let value = null;
     const type = userInput.type;
 
-    console.log(
-        `input: type: ${type}, name:${key}, value: ${value}`);
+    // console.log(
+    //     `input: type: ${type}, name:${key}, value: ${value}`);
 
     switch (type) {
       case 'checkbox':
@@ -74,7 +74,20 @@ const getUserInputsForScope = (div) => {
  * which call generatePojosFromUi().
  */
 const attachListenersToUi = () => {
-  // TODO
+  const attachListenersToUiForScope = (div) => {
+    const inputs = div.querySelectorAll('input, select');
+    for (const userInput of inputs) {
+      userInput.addEventListener('change', () => {
+        console.log('change event fired on', userInput, 'in div', div);
+        generatePojosFromUi();
+      })
+    }
+  };
+
+  const divs = document.querySelectorAll('div[data-scope]');
+  for (const div of divs) {
+    attachListenersToUiForScope(div);
+  }
 };
 
 /**
@@ -89,7 +102,15 @@ const applyPojosToUi = (pojos) => {
 // Main entry point.
 
 const pojos = generatePojosFromUi();
-console.log(JSON.stringify(pojos, null, 2));
+
+attachListenersToUi();
+
+document.querySelector(
+    'body > div:nth-child(3) > label > select').addEventListener('change',
+    () => {
+      alert('do something more on layout change');
+    });
+
 const pagediv = document.querySelector('div[data-scope="page"');
 const layoutdiv = document.querySelector('div[data-scope="layout"');
 const mapoptionsdiv = document.querySelector('div[data-scope="map-options"');
