@@ -14,19 +14,57 @@
  * limitations under the License.
  */
 
+const Selector = {
+  SCOPE_DATA_ATTRIB_NAME: 'scope',
+  NESTED_SCOPE_NAME: 'scope3',
+  NESTED_SCOPE_DATA_ATTRIB_NAME: 'dropdown',
+};
+
 /**
  * Create 3 POJOs containing user input from the HTML, based on the containers
  * (divs w/ data-scope attributes 'scope1', 'scope2', 'scope3').
  */
 const generatePojosFromUi = () => {
   const pojos = {};
-  const divs = document.querySelectorAll('div[data-scope]');
+  
+  const divs = document.querySelectorAll(
+    `div[data-${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
+  
   for (const div of divs) {
-    const scopeName = div.dataset.scope;
-    pojos[scopeName] = getUserInputsForScope(scopeName, div);
+    const scopeName = div.dataset[Selector.SCOPE_DATA_ATTRIB_NAME];
+    if (scopeName === Selector.NESTED_SCOPE_NAME) {
+      let selectElement = div.querySelector('select');
+      const selectValue = selectElement.value;
+      const subScopeDiv =
+        div.querySelector(
+          `div[data-${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}="${selectValue}"]`);
+      
+      adjustNestedScopeVisibility(selectElement, div);
+      
+      console.log(`dropdownSelectValue: ${selectValue}`);
+      
+      // Using the value, only grab inputs for the sub-scope.
+      pojos[scopeName] = getUserInputsForScope(scopeName, subScopeDiv);
+    } else {
+      pojos[scopeName] = getUserInputsForScope(scopeName, div);
+    }
   }
+  
   console.log('pojos:', JSON.stringify(pojos, undefined, 2));
   return pojos;
+};
+
+/**
+ * Show/hide the children of the parentDiv, based on the value of the selectElement.
+ */
+const adjustNestedScopeVisibility = (selectElement, parentDiv) => {
+  // TODO
+  selectElement.addEventListener(
+    'change',
+    () => {
+      alert('do something more on change');
+    }
+  );
 };
 
 /**
@@ -83,27 +121,12 @@ const attachListenersToUi = () => {
     }
   };
   
-  const divs = document.querySelectorAll('div[data-scope]');
+  const divs = document.querySelectorAll(
+    `div[data-${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
   for (const div of divs) {
     const scopeName = div.dataset.scope;
     attachListenersToUiForScope(scopeName, div);
   }
-};
-
-/**
- * Show/hide divs w/ data attribute 'data-dropdown' based on the value of the
- * Dropdown select element.
- */
-const attachChangeListenerForScope3Dropdown = () => {
-  // TODO
-  document.querySelector(
-    'body > div:nth-child(3) > label > select')
-          .addEventListener(
-            'change',
-            () => {
-              alert('do something more on layout change');
-            }
-          );
 };
 
 /**
@@ -116,12 +139,5 @@ const applyPojosToUi = (pojos) => {
 };
 
 // Main entry point.
-
 const pojos = generatePojosFromUi();
-
 attachListenersToUi();
-attachChangeListenerForScope3Dropdown();
-
-const pagediv = document.querySelector('div[data-scope="page"');
-const layoutdiv = document.querySelector('div[data-scope="layout"');
-const mapoptionsdiv = document.querySelector('div[data-scope="map-options"');
