@@ -37,8 +37,29 @@ const getParentOfNestedDivs = () => {
   }
 };
 
+/**
+ * Sets the selectElement's value to newValue. And fires a change event on the
+ * selectElement.
+ *
+ * @param selectElement
+ * @param newValue
+ */
+const setValueOnSelectElement = (selectElement, newValue) => {
+  selectElement.value = newValue;
+  fireChangeEventOnSelectElement(selectElement);
+};
+
+const fireChangeEventOnSelectElement = (selectElement) => {
+  selectElement.dispatchEvent(new Event('change'));
+};
+
+const getSelectElement = (parentDiv) => {
+  const selectElement = parentDiv.querySelector('select');
+  return selectElement;
+};
+
 const getSelectedNestedDiv = (parentDiv) => {
-  const selectValue = parentDiv.querySelector('select').value;
+  const selectValue = getSelectElement(parentDiv).value;
   // console.log(`dropdownSelectValue: ${selectValue}`);
   return parentDiv.querySelector(
     `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}="${selectValue}"]`);
@@ -71,8 +92,7 @@ const attachNestedDivVisibilityHandler = () => {
       // console.log('nested div visibility changed');
     }
   );
-  // Fire a change event to trigger the listener.
-  selectElement.dispatchEvent(new Event('change'));
+  fireChangeEventOnSelectElement(selectElement);
 };
 
 /**
@@ -85,6 +105,7 @@ const generatePojosFromUi = () => {
   for (const div of getAllTopLevelContainerDivs()) {
     const scopeName = getScopeName(div);
     if (scopeName === Selector.NESTED_SCOPE_NAME) {
+      pojos[Selector.DATA_ATTRIB_NESTED_SCOPE] = getSelectElement(div).value;
       const nestedDiv = getSelectedNestedDiv(div);
       pojos[scopeName] = getUserInputsForScope(scopeName, nestedDiv);
     } else {
@@ -119,13 +140,12 @@ const getUserInputsForScope = (scopeName, div) => {
     // console.log(
     //     `input: type: ${type}, name:${key}, value: ${value}`);
     
-    switch (type) {
-      case 'checkbox':
-        value = userInput.checked;
-        break;
-      default:
-        value = userInput.value;
+    if (type === 'checkbox') {
+      value = userInput.checked;
+    } else {
+      value = userInput.value;
     }
+    
     pojo[key] = value;
   }
   
@@ -167,13 +187,12 @@ const applyPojosToUi = (pojos) => {
               const value = pojo[key];
               const type = element.type;
         
-              switch (type) {
-                case 'checkbox':
-                  element.checked = value;
-                  break;
-                default:
-                  element.value = value;
+              if (type === 'checkbox') {
+                element.checked = value;
+              } else {
+                element.value = value;
               }
+        
               // console.log('scope:', getScopeName(divForScope),
               //             '\nkey:', key,
               //             '\nelement:', element,
@@ -186,15 +205,19 @@ const applyPojosToUi = (pojos) => {
   Object.keys(pojos)
         .forEach((key) => {
           const div = getDivForScope(key);
-          if (key === Selector.NESTED_SCOPE_NAME) {
-            
-            // TODO
-            //  update the value of select element
-            //  where to get the value of dropdown???
-            
-            applyToUi(getSelectedNestedDiv(div), pojos[key]);
-          } else {
-            applyToUi(div, pojos[key]);
+          switch (key) {
+            case Selector.DATA_ATTRIB_NESTED_SCOPE:
+              // Ignore this, since it is used only to store the value of the dropdown.
+              break;
+            case Selector.NESTED_SCOPE_NAME:
+              const savedSelectValue = pojos[Selector.DATA_ATTRIB_NESTED_SCOPE];
+              const selectElement = getSelectElement(div);
+              setValueOnSelectElement(selectElement, savedSelectValue);
+              applyToUi(getSelectedNestedDiv(div), pojos[key]);
+              break;
+            default:
+              applyToUi(div, pojos[key]);
+              break;
           }
         });
   
@@ -219,8 +242,8 @@ document.querySelector('button')
           pojos['scope2'].textData1 = "test";
           pojos['scope2'].latLng = "48.8894895,2.242825";
   
+          pojos['data-dropdown'] = 'Dropdown2';
           pojos['scope3'].flag1 = true;
-          pojos['scope3'].flag2 = true;
   
           applyPojosToUi(pojos);
         });
