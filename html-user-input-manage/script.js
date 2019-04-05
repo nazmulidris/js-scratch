@@ -79,7 +79,7 @@ const getDivForScope = (key) => {
  * element. This method causes a change event to be dispatched as soon as it is
  * called forcing the UI to show/hide what is currently selected.
  */
-const attachNestedDivVisibilityHandler = () => {
+const handleNestedDivVisibility = () => {
   const parentDiv = getParentOfNestedDivs();
   const selectElement = parentDiv.querySelector('select');
   selectElement.addEventListener(
@@ -230,7 +230,7 @@ const applyPojosToUi = (pojos) => {
 // Main entry point.
 const pojos = generatePojosFromUi();
 attachListenersToUi();
-attachNestedDivVisibilityHandler();
+handleNestedDivVisibility();
 
 // Clicking button causes pojo to be modified triggering a change in the UI.
 document.querySelector('button')
