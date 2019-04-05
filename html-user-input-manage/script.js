@@ -31,7 +31,8 @@ const generatePojosFromUi = () => {
     `div[data-${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
   
   for (const div of divs) {
-    const scopeName = div.dataset[Selector.SCOPE_DATA_ATTRIB_NAME];
+    const scopeName =
+      div.getAttribute(`data-${Selector.SCOPE_DATA_ATTRIB_NAME}`);
     if (scopeName === Selector.NESTED_SCOPE_NAME) {
       let selectElement = div.querySelector('select');
       const selectValue = selectElement.value;
@@ -39,6 +40,9 @@ const generatePojosFromUi = () => {
         div.querySelector(
           `div[data-${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}="${selectValue}"]`);
       
+      // TODO
+      //   move this out of here into attachListenersToUi ... should only call this
+      //   once, and not every time this function runs!
       adjustNestedScopeVisibility(selectElement, div);
       
       console.log(`dropdownSelectValue: ${selectValue}`);
