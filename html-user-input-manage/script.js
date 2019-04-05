@@ -15,9 +15,61 @@
  */
 
 const Selector = {
-  SCOPE_DATA_ATTRIB_NAME: 'scope',
+  SCOPE_DATA_ATTRIB_NAME: 'data-scope',
   NESTED_SCOPE_NAME: 'scope3',
-  NESTED_SCOPE_DATA_ATTRIB_NAME: 'dropdown',
+  NESTED_SCOPE_DATA_ATTRIB_NAME: 'data-dropdown',
+};
+
+const getAllTopLevelContainerDivs = () => {
+  return document.querySelectorAll(
+      `div[${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
+};
+
+const getScopeName = (div) => {
+  return div.getAttribute(`${Selector.SCOPE_DATA_ATTRIB_NAME}`);
+};
+
+const getParentOfNestedDivs = () => {
+  for (const div of getAllTopLevelContainerDivs()) {
+    if (getScopeName(div) === Selector.NESTED_SCOPE_NAME) {
+      return div;
+    }
+  }
+};
+
+const getSelectedNestedDiv = (parentDiv) => {
+  const selectValue = parentDiv.querySelector('select').value;
+  console.log(`dropdownSelectValue: ${selectValue}`);
+  return parentDiv.querySelector(
+      `div[${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}="${selectValue}"]`);
+};
+
+const getAllNestedDivs = (parentDiv) => {
+  return parentDiv.querySelectorAll(
+      `div[${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}]`)
+};
+
+/**
+ * Show/hide the children of the parentDiv, based on the value of the select
+ * element.
+ */
+const attachNestedDivVisibilityHandler = () => {
+  const parentDiv = getParentOfNestedDivs();
+  const selectElement = parentDiv.querySelector('select');
+  selectElement.addEventListener(
+      'change',
+      () => {
+        const parentDiv = getParentOfNestedDivs();
+        const nestedDivs = getAllNestedDivs(parentDiv);
+        nestedDivs.forEach((div) => {
+          div.style.display = 'none';
+        });
+        getSelectedNestedDiv(parentDiv).style.display = 'block';
+        console.log('nested div visibility changed');
+      }
+  );
+  // Fire a change event to trigger the listener.
+  selectElement.dispatchEvent(new Event('change'));
 };
 
 /**
@@ -26,49 +78,19 @@ const Selector = {
  */
 const generatePojosFromUi = () => {
   const pojos = {};
-  
-  const divs = document.querySelectorAll(
-    `div[data-${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
-  
-  for (const div of divs) {
-    const scopeName =
-      div.getAttribute(`data-${Selector.SCOPE_DATA_ATTRIB_NAME}`);
+
+  for (const div of getAllTopLevelContainerDivs()) {
+    const scopeName = getScopeName(div);
     if (scopeName === Selector.NESTED_SCOPE_NAME) {
-      let selectElement = div.querySelector('select');
-      const selectValue = selectElement.value;
-      const subScopeDiv =
-        div.querySelector(
-          `div[data-${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}="${selectValue}"]`);
-      
-      // TODO
-      //   move this out of here into attachListenersToUi ... should only call this
-      //   once, and not every time this function runs!
-      adjustNestedScopeVisibility(selectElement, div);
-      
-      console.log(`dropdownSelectValue: ${selectValue}`);
-      
-      // Using the value, only grab inputs for the sub-scope.
-      pojos[scopeName] = getUserInputsForScope(scopeName, subScopeDiv);
+      const nestedDiv = getSelectedNestedDiv(div);
+      pojos[scopeName] = getUserInputsForScope(scopeName, nestedDiv);
     } else {
       pojos[scopeName] = getUserInputsForScope(scopeName, div);
     }
   }
-  
+
   console.log('pojos:', JSON.stringify(pojos, undefined, 2));
   return pojos;
-};
-
-/**
- * Show/hide the children of the parentDiv, based on the value of the selectElement.
- */
-const adjustNestedScopeVisibility = (selectElement, parentDiv) => {
-  // TODO
-  selectElement.addEventListener(
-    'change',
-    () => {
-      alert('do something more on change');
-    }
-  );
 };
 
 /**
@@ -78,21 +100,22 @@ const adjustNestedScopeVisibility = (selectElement, parentDiv) => {
  * - select element
  * - input text element
  *
+ * @param scopeName
  * @param div
  */
 const getUserInputsForScope = (scopeName, div) => {
   const pojo = {};
-  
+
   const inputs = div.querySelectorAll('input, select');
-  
+
   for (const userInput of inputs) {
     const key = userInput.name;
     let value = null;
     const type = userInput.type;
-    
+
     // console.log(
     //     `input: type: ${type}, name:${key}, value: ${value}`);
-    
+
     switch (type) {
       case 'checkbox':
         value = userInput.checked;
@@ -102,7 +125,7 @@ const getUserInputsForScope = (scopeName, div) => {
     }
     pojo[key] = value;
   }
-  
+
   return pojo;
 };
 
@@ -124,9 +147,9 @@ const attachListenersToUi = () => {
       })
     }
   };
-  
+
   const divs = document.querySelectorAll(
-    `div[data-${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
+      `div[${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
   for (const div of divs) {
     const scopeName = div.dataset.scope;
     attachListenersToUiForScope(scopeName, div);
@@ -145,3 +168,4 @@ const applyPojosToUi = (pojos) => {
 // Main entry point.
 const pojos = generatePojosFromUi();
 attachListenersToUi();
+attachNestedDivVisibilityHandler();
