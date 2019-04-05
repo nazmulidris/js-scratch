@@ -186,13 +186,13 @@ const applyPojosToUi = (pojos) => {
   Object.keys(pojos)
         .forEach((key) => {
           const div = getDivForScope(key);
-          const scopeName = getScopeName(div);
-          if (scopeName === Selector.NESTED_SCOPE_NAME) {
+          if (key === Selector.NESTED_SCOPE_NAME) {
+            
             // TODO
-            //  do something different than below...
-            //  the select needs to be updated
-            //  then apply to the right sub UI
-            // applyToUi(get**Nested**DivForScope(key), pojos[key]);
+            //  update the value of select element
+            //  where to get the value of dropdown???
+            
+            applyToUi(getSelectedNestedDiv(div), pojos[key]);
           } else {
             applyToUi(div, pojos[key]);
           }
