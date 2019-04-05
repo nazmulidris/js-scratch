@@ -22,7 +22,7 @@ const Selector = {
 
 const getAllTopLevelContainerDivs = () => {
   return document.querySelectorAll(
-      `div[${Selector.DATA_ATTRIB_SCOPE}]`);
+    `div[${Selector.DATA_ATTRIB_SCOPE}]`);
 };
 
 const getScopeName = (div) => {
@@ -39,14 +39,14 @@ const getParentOfNestedDivs = () => {
 
 const getSelectedNestedDiv = (parentDiv) => {
   const selectValue = parentDiv.querySelector('select').value;
-  console.log(`dropdownSelectValue: ${selectValue}`);
+  // console.log(`dropdownSelectValue: ${selectValue}`);
   return parentDiv.querySelector(
-      `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}="${selectValue}"]`);
+    `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}="${selectValue}"]`);
 };
 
 const getAllNestedDivs = (parentDiv) => {
   return parentDiv.querySelectorAll(
-      `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}]`)
+    `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}]`)
 };
 
 const getDivForScope = (key) => {
@@ -62,16 +62,14 @@ const attachNestedDivVisibilityHandler = () => {
   const parentDiv = getParentOfNestedDivs();
   const selectElement = parentDiv.querySelector('select');
   selectElement.addEventListener(
-      'change',
-      () => {
-        const parentDiv = getParentOfNestedDivs();
-        const nestedDivs = getAllNestedDivs(parentDiv);
-        nestedDivs.forEach((div) => {
-          div.style.display = 'none';
-        });
-        getSelectedNestedDiv(parentDiv).style.display = 'block';
-        console.log('nested div visibility changed');
-      }
+    'change',
+    () => {
+      const parentDiv = getParentOfNestedDivs();
+      const nestedDivs = getAllNestedDivs(parentDiv);
+      nestedDivs.forEach((div) => div.style.display = 'none');
+      getSelectedNestedDiv(parentDiv).style.display = 'block';
+      // console.log('nested div visibility changed');
+    }
   );
   // Fire a change event to trigger the listener.
   selectElement.dispatchEvent(new Event('change'));
@@ -83,7 +81,7 @@ const attachNestedDivVisibilityHandler = () => {
  */
 const generatePojosFromUi = () => {
   const pojos = {};
-
+  
   for (const div of getAllTopLevelContainerDivs()) {
     const scopeName = getScopeName(div);
     if (scopeName === Selector.NESTED_SCOPE_NAME) {
@@ -93,7 +91,7 @@ const generatePojosFromUi = () => {
       pojos[scopeName] = getUserInputsForScope(scopeName, div);
     }
   }
-
+  
   console.log('pojos:', JSON.stringify(pojos, undefined, 2));
   return pojos;
 };
@@ -110,17 +108,17 @@ const generatePojosFromUi = () => {
  */
 const getUserInputsForScope = (scopeName, div) => {
   const pojo = {};
-
+  
   const inputs = div.querySelectorAll('input, select');
-
+  
   for (const userInput of inputs) {
     const key = userInput.name;
     let value = null;
     const type = userInput.type;
-
+    
     // console.log(
     //     `input: type: ${type}, name:${key}, value: ${value}`);
-
+    
     switch (type) {
       case 'checkbox':
         value = userInput.checked;
@@ -130,7 +128,7 @@ const getUserInputsForScope = (scopeName, div) => {
     }
     pojo[key] = value;
   }
-
+  
   return pojo;
 };
 
@@ -143,22 +141,15 @@ const getUserInputsForScope = (scopeName, div) => {
  * which call generatePojosFromUi().
  */
 const attachListenersToUi = () => {
-  const attachListenersToUiForScope = (scopeName, div) => {
-    const inputs = div.querySelectorAll('input, select');
-    for (const userInput of inputs) {
-      userInput.addEventListener('change', () => {
-        console.log('change event fired on', userInput, 'in div', div);
-        generatePojosFromUi();
-      })
+  const attachListenersToUiForScope = (div) => {
+    const elements = div.querySelectorAll('input, select');
+    for (const element of elements) {
+      element.addEventListener('change', generatePojosFromUi);
     }
   };
-
-  const divs = document.querySelectorAll(
-      `div[${Selector.DATA_ATTRIB_SCOPE}]`);
-  for (const div of divs) {
-    const scopeName = div.dataset.scope;
-    attachListenersToUiForScope(scopeName, div);
-  }
+  
+  getAllTopLevelContainerDivs()
+    .forEach((div) => attachListenersToUiForScope(div));
 };
 
 /**
@@ -168,41 +159,44 @@ const attachListenersToUi = () => {
  */
 const applyPojosToUi = (pojos) => {
   const applyToUi = (divForScope, pojo) => {
-    Object.keys(pojo).forEach((key, index) => {
-      const element = divForScope.querySelector(
-          `input[name="${key}"], select[name="${key}"]`);
-      if (element !== null) {
-        const value = pojo[key];
-        const type = element.type;
-
-        switch (type) {
-          case 'checkbox':
-            element.checked = value;
-            break;
-          default:
-            element.value = value;
-        }
-
-        console.log('key:', key, '\nelement:', element, '\ntype:', type,
-            '\nvalue:', value);
-      }
-    });
+    Object.keys(pojo)
+          .forEach((key, index) => {
+            const element = divForScope.querySelector(
+              `input[name="${key}"], select[name="${key}"]`);
+            if (element !== null) {
+              const value = pojo[key];
+              const type = element.type;
+        
+              switch (type) {
+                case 'checkbox':
+                  element.checked = value;
+                  break;
+                default:
+                  element.value = value;
+              }
+        
+              console.log('key:', key, '\nelement:', element, '\ntype:', type,
+                          '\nvalue:', value
+              );
+            }
+          });
   };
-
-  Object.keys(pojos).forEach((key, index) => {
-    const div = getDivForScope(key);
-    const scopeName = getScopeName(div);
-    if (scopeName === Selector.NESTED_SCOPE_NAME) {
-      // TODO
-      //  do something different than below...
-      //  the select needs to be updated
-      //  then apply to the right sub UI
-      // applyToUi(get**Nested**DivForScope(key), pojos[key]);
-    } else {
-      applyToUi(getDivForScope(key), pojos[key]);
-    }
-  });
-
+  
+  Object.keys(pojos)
+        .forEach((key, index) => {
+          const div = getDivForScope(key);
+          const scopeName = getScopeName(div);
+          if (scopeName === Selector.NESTED_SCOPE_NAME) {
+            // TODO
+            //  do something different than below...
+            //  the select needs to be updated
+            //  then apply to the right sub UI
+            // applyToUi(get**Nested**DivForScope(key), pojos[key]);
+          } else {
+            applyToUi(getDivForScope(key), pojos[key]);
+          }
+        });
+  
 };
 
 // Main entry point.
@@ -212,17 +206,17 @@ attachNestedDivVisibilityHandler();
 
 // Clicking button causes pojo to be modified triggering a change in the UI.
 document.querySelector('button')
-    .addEventListener("click", () => {
-      pojos['scope1'].flag1 = true;
-
-      pojos['scope2'].distance = "15";
-      pojos['scope2'].mode = "BIKE";
-      pojos['scope2'].textData1 = "test";
-      pojos['scope2'].latLng = "48.8894895,2.242825";
-
-      pojos['scope3'].flag1 = true;
-      pojos['scope3'].flag2 = true;
-
-      console.log('pojos:', JSON.stringify(pojos, undefined, 2));
-      applyPojosToUi(pojos);
-    });
+        .addEventListener("click", () => {
+          pojos['scope1'].flag1 = true;
+  
+          pojos['scope2'].distance = "15";
+          pojos['scope2'].mode = "BIKE";
+          pojos['scope2'].textData1 = "test";
+          pojos['scope2'].latLng = "48.8894895,2.242825";
+  
+          pojos['scope3'].flag1 = true;
+          pojos['scope3'].flag2 = true;
+  
+          console.log('pojos:', JSON.stringify(pojos, undefined, 2));
+          applyPojosToUi(pojos);
+        });
