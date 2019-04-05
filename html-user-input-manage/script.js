@@ -15,18 +15,18 @@
  */
 
 const Selector = {
-  SCOPE_DATA_ATTRIB_NAME: 'data-scope',
+  DATA_ATTRIB_SCOPE: 'data-scope',
+  DATA_ATTRIB_NESTED_SCOPE: 'data-dropdown',
   NESTED_SCOPE_NAME: 'scope3',
-  NESTED_SCOPE_DATA_ATTRIB_NAME: 'data-dropdown',
 };
 
 const getAllTopLevelContainerDivs = () => {
   return document.querySelectorAll(
-      `div[${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
+      `div[${Selector.DATA_ATTRIB_SCOPE}]`);
 };
 
 const getScopeName = (div) => {
-  return div.getAttribute(`${Selector.SCOPE_DATA_ATTRIB_NAME}`);
+  return div.getAttribute(`${Selector.DATA_ATTRIB_SCOPE}`);
 };
 
 const getParentOfNestedDivs = () => {
@@ -41,12 +41,12 @@ const getSelectedNestedDiv = (parentDiv) => {
   const selectValue = parentDiv.querySelector('select').value;
   console.log(`dropdownSelectValue: ${selectValue}`);
   return parentDiv.querySelector(
-      `div[${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}="${selectValue}"]`);
+      `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}="${selectValue}"]`);
 };
 
 const getAllNestedDivs = (parentDiv) => {
   return parentDiv.querySelectorAll(
-      `div[${Selector.NESTED_SCOPE_DATA_ATTRIB_NAME}]`)
+      `div[${Selector.DATA_ATTRIB_NESTED_SCOPE}]`)
 };
 
 /**
@@ -149,7 +149,7 @@ const attachListenersToUi = () => {
   };
 
   const divs = document.querySelectorAll(
-      `div[${Selector.SCOPE_DATA_ATTRIB_NAME}]`);
+      `div[${Selector.DATA_ATTRIB_SCOPE}]`);
   for (const div of divs) {
     const scopeName = div.dataset.scope;
     attachListenersToUiForScope(scopeName, div);
