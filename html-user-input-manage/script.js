@@ -160,7 +160,7 @@ const attachListenersToUi = () => {
 const applyPojosToUi = (pojos) => {
   const applyToUi = (divForScope, pojo) => {
     Object.keys(pojo)
-          .forEach((key, index) => {
+          .forEach((key) => {
             const element = divForScope.querySelector(
               `input[name="${key}"], select[name="${key}"]`);
             if (element !== null) {
@@ -174,16 +174,17 @@ const applyPojosToUi = (pojos) => {
                 default:
                   element.value = value;
               }
-        
-              console.log('key:', key, '\nelement:', element, '\ntype:', type,
-                          '\nvalue:', value
-              );
+              // console.log('scope:', getScopeName(divForScope),
+              //             '\nkey:', key,
+              //             '\nelement:', element,
+              //             '\ntype:', type,
+              //             '\nvalue:', value);
             }
           });
   };
   
   Object.keys(pojos)
-        .forEach((key, index) => {
+        .forEach((key) => {
           const div = getDivForScope(key);
           const scopeName = getScopeName(div);
           if (scopeName === Selector.NESTED_SCOPE_NAME) {
@@ -193,9 +194,13 @@ const applyPojosToUi = (pojos) => {
             //  then apply to the right sub UI
             // applyToUi(get**Nested**DivForScope(key), pojos[key]);
           } else {
-            applyToUi(getDivForScope(key), pojos[key]);
+            applyToUi(div, pojos[key]);
           }
         });
+  
+  // Since change events didn't get fired for each value that was set above,
+  // call this.
+  generatePojosFromUi();
   
 };
 
@@ -217,6 +222,5 @@ document.querySelector('button')
           pojos['scope3'].flag1 = true;
           pojos['scope3'].flag2 = true;
   
-          console.log('pojos:', JSON.stringify(pojos, undefined, 2));
           applyPojosToUi(pojos);
         });
