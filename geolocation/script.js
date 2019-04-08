@@ -40,14 +40,30 @@ class PositionListener {
   };
 }
 
+let watchId = undefined;
+
 const main = () => {
+  console.log('userAgent: ', nav.userAgent);
   if (geo) {
     console.log('geolocation api available in browser');
     const positionListener = new PositionListener();
     geo.getCurrentPosition(positionListener.onSuccess,
         positionListener.onFailure, positionListener.options);
+    watchId = geo.watchPosition(positionListener.onSuccess,
+        positionListener.onFailure);
   }
-  console.log('userAgent: ', nav.userAgent);
 };
+
+window.addEventListener('beforeunload', function (e) {
+  if(geo && watchId){
+    geo.clearWatch(watchId);
+    console.log('clear watchId')
+  }
+
+  // Cancel the event as stated by the standard.
+  e.preventDefault();
+  // Chrome requires returnValue to be set.
+  e.returnValue = '';
+});
 
 main();
