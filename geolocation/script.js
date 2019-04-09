@@ -47,6 +47,8 @@ const main = () => {
         assertGeoIsAvailable();
         if (watchId) {
           window.navigator.geolocation.clearWatch(watchId);
+          console.log('watchId: ', watchId, 'cleared');
+          watchId = undefined;
         }
       });
 };
@@ -93,8 +95,7 @@ class PositionListener {
     const {latitude: lat, longitude: lng} = position.coords;
     console.log(lat, lng);
     document.getElementById(
-        'latLng').innerText = `${watchId ? "no watchId"
-        : watchId}, ${new Date()}: ${lat}, ${lng}`;
+        'latLng').innerText = `${watchId}, ${new Date()}: ${lat}, ${lng}`;
   }
 
   /**
