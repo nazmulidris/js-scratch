@@ -16,6 +16,9 @@
 
 const main = () => {
 
+  /**
+   * @type {PositionListener}
+   */
   let watchingListener = undefined;
 
   console.log('userAgent: ', window.navigator.userAgent);
@@ -28,6 +31,7 @@ const main = () => {
   document.getElementById('watchPosition').addEventListener("click",
       (event) => {
         if (watchingListener) {
+          console.error('Already watching a position');
           return;
         }
         watchingListener = PositionListener.watchPosition();
@@ -77,6 +81,9 @@ const assertGeoIsAvailable = () => {
 // Helper classes.
 
 class PositionListener {
+  /**
+   * @return {PositionListener}
+   */
   static getCurrentPosition() {
     assertGeoIsAvailable();
     const listener = new PositionListener();
@@ -85,6 +92,9 @@ class PositionListener {
     return listener;
   }
 
+  /**
+   * @return {PositionListener}
+   */
   static watchPosition() {
     assertGeoIsAvailable();
     const listener = new PositionListener();
