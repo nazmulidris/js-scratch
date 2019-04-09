@@ -14,41 +14,30 @@
  * limitations under the License.
  */
 
-let watchId = undefined;
-
 const main = () => {
+
+  let watchingListener = undefined;
 
   console.log('userAgent: ', window.navigator.userAgent);
 
   document.getElementById('getCurrentPosition').addEventListener("click",
       (event) => {
-        assertGeoIsAvailable();
-        const listener = new PositionListener();
-        window.navigator.geolocation.getCurrentPosition(listener.onSuccess,
-            listener.onFailure,
-            listener.lowAccuracyOptions);
+        const listener = PositionListener.getCurrentPosition();
       });
 
   document.getElementById('watchPosition').addEventListener("click",
       (event) => {
-        assertGeoIsAvailable();
-        const listener = new PositionListener();
-        if (watchId) {
-          console.log(`watchId: ${watchId} is already active.`);
+        if (watchingListener) {
           return;
         }
-        watchId = window.navigator.geolocation.watchPosition(listener.onSuccess,
-            listener.onFailure,
-            listener.lowAccuracyOptions);
+        watchingListener = PositionListener.watchPosition();
       });
 
   document.getElementById('clearWatch').addEventListener("click",
       (event) => {
-        assertGeoIsAvailable();
-        if (watchId) {
-          window.navigator.geolocation.clearWatch(watchId);
-          console.log('watchId: ', watchId, 'cleared');
-          watchId = undefined;
+        if (watchingListener) {
+          watchingListener.clearWatch();
+          watchingListener = undefined;
         }
       });
 };
@@ -88,28 +77,66 @@ const assertGeoIsAvailable = () => {
 // Helper classes.
 
 class PositionListener {
+  static getCurrentPosition() {
+    assertGeoIsAvailable();
+    const listener = new PositionListener();
+    window.navigator.geolocation.getCurrentPosition(listener.onSuccess,
+        listener.onFailure, listener.lowAccuracyOptions);
+    return listener;
+  }
+
+  static watchPosition() {
+    assertGeoIsAvailable();
+    const listener = new PositionListener();
+    listener.watchId = window.navigator.geolocation.watchPosition(
+        listener.onSuccess,
+        listener.onFailure, listener.lowAccuracyOptions);
+    return listener;
+  }
+
+  constructor() {
+    this.watchId = undefined;
+  }
+
+  clearWatch = () => {
+    if (this.watchId) {
+      window.navigator.geolocation.clearWatch(this.watchId);
+      console.log('watchId: ', this.watchId, ' cleared.');
+      this.watchId = undefined;
+    }
+  };
+
   /**
    * @param {Position} position
    */
-  onSuccess(position) {
+  onSuccess = (position) => {
     const {latitude: lat, longitude: lng} = position.coords;
     console.log(lat, lng);
-    document.getElementById(
-        'latLng').innerText = `${watchId}, ${new Date()}: ${lat}, ${lng}`;
-  }
+
+    if (this.watchId) {
+      document.getElementById(
+          'latLng').innerText = `${this.watchId}, ${new Date()}: ${lat}, ${lng}`;
+
+    } else {
+      document.getElementById(
+          'latLng').innerText = `${lat}, ${lng}`;
+
+    }
+  };
 
   /**
    * @param {PositionError} error
    */
-  onFailure(error) {
+  onFailure = (error) => {
     console.error(error.message);
-  }
+  };
 
   lowAccuracyOptions = {
     maximumAge: 0,
     timeout: 5000,
     enableHighAccuracy: false,
   };
+
   highAccuracyOptions = {
     maximumAge: 0,
     timeout: 5000,
