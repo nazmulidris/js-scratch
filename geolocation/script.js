@@ -106,6 +106,7 @@ class PositionListener {
   }
 
   lowAccuracyOptions = {
+    maximumAge: 0,
     timeout: 5000,
     enableHighAccuracy: false,
   };
