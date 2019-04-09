@@ -82,6 +82,11 @@ const assertGeoIsAvailable = () => {
 
 class PositionListener {
   /**
+   * Why does this work? Since onFailure & onSuccess is defined using regular method
+   * syntax, it will acquire the context of the instance that invoked it
+   * (this in the example above). And since arrow functions are lexically
+   * scoped, this will be the current instance of our class.
+   * More info: https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
    * @return {PositionListener}
    */
   static getCurrentPosition() {
@@ -95,6 +100,11 @@ class PositionListener {
   }
 
   /**
+   * Why does this work? Since onFailure & onSuccess is defined using regular method
+   * syntax, it will acquire the context of the instance that invoked it
+   * (this in the example above). And since arrow functions are lexically
+   * scoped, this will be the current instance of our class.
+   * More info: https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
    * @return {PositionListener}
    */
   static watchPosition() {
