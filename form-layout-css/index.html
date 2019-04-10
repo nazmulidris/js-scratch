@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>layout demo</title>
+  <meta name="viewport" content="initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<div data-scope="optionSet1">
+  <label><input type="checkbox" name="checkbox1"> Flag 1</label>
+  <label><input type="checkbox" name="checkbox2"> Flag 2</label>
+  <label><input type="checkbox" name="checkbox3"> Flag 3</label>
+  <label>Number (unit): <input name="numberInput1"
+                               type="number" value="0" min="0" step="10"></label>
+  <button name="button1">Button1</button>
+</div>
+
+<div data-scope="optionSet2">
+  <label>
+    Dropdown 1:
+    <select name="dropdown1">
+      <option value="">None</option>
+      <option value="option1">Option1</option>
+      <option value="option2">Option2</option>
+      <option value="option3">Option3</option>
+    </select>
+  </label>
+
+  <label>
+    <input name="checkbox4"
+           type="checkbox"
+           checked> Flag 4
+  </label>
+
+  <label>
+    <input name="checkbox5"
+           type="checkbox"
+           checked> Flag 5
+  </label>
+
+  <label>
+    Text input 2: <input placeholder="Type text" type="text" name="textinput2">
+  </label>
+
+  <button name="button2">Button 2</button>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+html {
+  background: grey;
+  font-size: 10pt;
+}
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-scope="optionSet2"],
+[data-scope="optionSet1"] {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 12pt;
+  background: #fff;
+  padding: 8px 0;
+}
+
+[data-scope="optionSet2"] > *,
+[data-scope="optionSet1"] > * {
+  margin: 0 8px;
+}
