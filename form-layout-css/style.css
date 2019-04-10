@@ -31,17 +31,28 @@ body {
   flex-direction: column;
 }
 
-[data-scope="optionSet2"],
-[data-scope="optionSet1"] {
+[data-scope] {
   display: flex;
   flex-direction: row;
   align-items: center;
   font-size: 12pt;
   background: #fff;
   padding: 8px 0;
+  border: 1px dotted #4d90fe;
 }
 
-[data-scope="optionSet2"] > *,
-[data-scope="optionSet1"] > * {
+[data-scope] > * {
   margin: 0 8px;
+  border: 1px dashed lightgreen;
+}
+
+[data-scope] > * {
+  align-items: center;
+  /* Declare this to be a flex container. */
+  display: flex;
+}
+
+[data-scope] > label > * {
+  /* Any child of the label is a flex item and should be centered. */
+  align-items: center;
 }
