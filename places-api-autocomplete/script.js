@@ -1,8 +1,8 @@
 function initMap() {
   console.log('initMap');
 
-  const input = document.getElementById('pac-input');
-  const autocomplete = new google.maps.places.Autocomplete(input);
+  const pacInputElement = document.getElementById('pac-input');
+  const autocomplete = new google.maps.places.Autocomplete(pacInputElement);
   autocomplete.addListener('place_changed', () => {
     const placeResult = autocomplete.getPlace();
     console.log('place: ', placeResult);
