@@ -3,6 +3,8 @@
 ## Promises
 - https://stackoverflow.com/questions/44427908/catch-geolocation-error-async-await
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+- https://medium.com/@rafaelvidaurre/truly-understanding-async-await-491dd580500e
+- https://github.com/getify/You-Dont-Know-JS/blob/6f51ed6746300f51bc6c930c080b8a7426b7629b/async%20%26%20performance/ch3.md#promise-trust
 
 ## Reverse geocoding
 - https://wiki.openstreetmap.org/wiki/Nominatim
