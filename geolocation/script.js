@@ -14,142 +14,113 @@
  * limitations under the License.
  */
 
+// Main entry point.
 const main = () => {
-
-  /**
-   * @type {PositionListener}
-   */
-  let watchingListener = undefined;
-
-  console.log('userAgent: ', window.navigator.userAgent);
-
-  document.getElementById('getCurrentPosition').addEventListener("click",
-      (event) => {
-        const listener = PositionListener.getCurrentPosition();
-      });
-
-  document.getElementById('watchPosition').addEventListener("click",
-      (event) => {
-        if (watchingListener) {
-          console.error('Already watching a position');
-          return;
-        }
-        watchingListener = PositionListener.watchPosition();
-      });
-
-  document.getElementById('clearWatch').addEventListener("click",
-      (event) => {
-        if (watchingListener) {
-          watchingListener.clearWatch();
-          watchingListener = undefined;
-        }
-      });
+  assertGeolocationIsAvailable();
+  document.getElementById('currentPositionPromise')
+          .addEventListener("click", currentPositionPromiseButtonHandler);
+  document.getElementById('currentPositionAsync')
+          .addEventListener("click", currentPositionAsyncButtonHandler);
 };
 
-// Attach to window lifecycle events.
+const currentPositionAsyncButtonHandler = async () => {
+  try {
+    const position = await invokeGetCurrentPositionAsync();
+    console.log(getLatLngFromPosition(position));
+  } catch (error) {
+    console.error(error);
+    window.alert(error.message);
+  }
+};
 
 /**
- * More info: https://stackoverflow.com/a/52358522/2085356
+ * This function doesn't work, because it returns immediately before the
+ * getCurrentPosition() method returns anything. Calling this function will always
+ * return undefined.
  */
-window.addEventListener('beforeunload', (event) => {
-  if (watchId) {
-    assertGeoIsAvailable().clearWatch(watchId);
-    console.log('clear watchId')
-  }
-  // Cancel the event as stated by the standard.
-  event.preventDefault();
-  // Chrome requires returnValue to be set.
-  event.returnValue = '';
-});
+const invokeGetCurrentPositionAsync = async () => {
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 30000,
+    maximumAge: 0
+  };
+  window.navigator.geolocation.getCurrentPosition(
+    (position) => {
+      console.log(position);
+      return position;
+    },
+    (error) => {
+      throw error;
+    },
+    options
+  );
+};
 
-window.addEventListener('DOMContentLoaded',
-    (event) => {
-      main();
-    });
+// More info:
+// https://stackoverflow.com/a/44439358/2085356
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+/**
+ * @returns {Promise<Position>}
+ */
+const invokeGetCurrentPositionPromise = () => {
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 30000,
+    maximumAge: 0
+  };
+  return new Promise((resolve, reject) => {
+    window.navigator.geolocation.getCurrentPosition(resolve, reject, options);
+  });
+};
+
+const currentPositionPromiseButtonHandler = async () => {
+  try {
+    updateUi('invokeGetCurrentPositionPromise()...');
+    const position = await invokeGetCurrentPositionPromise();
+    console.log(position);
+    updateUi(JSON.stringify(
+      getLatLngFromPosition(position), null, 2));
+    
+    updateUi('fetchReverseGeocode()...');
+    const reverseGeocode = await fetchReverseGeocode(position);
+    console.log(reverseGeocode);
+    updateUi(reverseGeocode.display_name);
+  } catch (error) {
+    console.error(error);
+    updateUi(error.message);
+  }
+};
+
+const updateUi = (message) => {
+  const element = document.getElementById('latLng');
+  element.innerText = element.innerText + '\n--\n' + message;
+};
+
+/**
+ * @param {Position} position
+ */
+const fetchReverseGeocode = async (position) => {
+  const format = 'jsonv2';
+  const latLng = getLatLngFromPosition(position);
+  const url = `https://nominatim.openstreetmap.org/reverse?format=${
+    format}&lat=${latLng.lat}&lon=${latLng.lng}`;
+  return await fetch(url)
+    .then((response) => response.json())
+    .then((json) => json);
+};
 
 // Helper functions.
-
-const assertGeoIsAvailable = () => {
-  if (window.navigator.geolocation) {
-    return;
-  }
+const getLatLngFromPosition = (position) => {
+  if (!position) return;
+  return {lat: position.coords.latitude, lng: position.coords.longitude};
+};
+const assertGeolocationIsAvailable = () => {
+  if (window.navigator.geolocation) return;
   const message = "window.navigator.geolocation is not available";
   console.error(message);
+  window.alert(message);
   throw new Error(message);
 };
 
-// Helper classes.
-
-class PositionListener {
-  /**
-   * @return {PositionListener}
-   */
-  static getCurrentPosition() {
-    assertGeoIsAvailable();
-    const listener = new PositionListener();
-    window.navigator.geolocation.getCurrentPosition(listener.onSuccess,
-        listener.onFailure, listener.lowAccuracyOptions);
-    return listener;
-  }
-
-  /**
-   * @return {PositionListener}
-   */
-  static watchPosition() {
-    assertGeoIsAvailable();
-    const listener = new PositionListener();
-    listener.watchId = window.navigator.geolocation.watchPosition(
-        listener.onSuccess,
-        listener.onFailure, listener.lowAccuracyOptions);
-    return listener;
-  }
-
-  constructor() {
-    this.watchId = undefined;
-  }
-
-  clearWatch = () => {
-    if (this.watchId) {
-      window.navigator.geolocation.clearWatch(this.watchId);
-      console.log('watchId: ', this.watchId, ' cleared.');
-      this.watchId = undefined;
-    }
-  };
-
-  /**
-   * @param {Position} position
-   */
-  onSuccess = (position) => {
-    const {latitude: lat, longitude: lng} = position.coords;
-    console.log(lat, lng);
-
-    if (this.watchId) {
-      document.getElementById(
-          'latLng').innerText = `${this.watchId}, ${new Date()}: ${lat}, ${lng}`;
-
-    } else {
-      document.getElementById(
-          'latLng').innerText = `${lat}, ${lng}`;
-
-    }
-  };
-
-  /**
-   * @param {PositionError} error
-   */
-  onFailure = (error) => {
-    console.error(error.message);
-  };
-
-  lowAccuracyOptions = {
-    maximumAge: 0,
-    timeout: 5000,
-    enableHighAccuracy: false,
-  };
-
-  highAccuracyOptions = {
-    maximumAge: 0,
-    timeout: 5000,
-    enableHighAccuracy: true,
-  };
-}
+// Attach DOM lifecycle listeners.
+window.addEventListener('DOMContentLoaded', main);
