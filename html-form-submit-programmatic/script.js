@@ -15,18 +15,18 @@
  */
 
 function processForm(day, month, year, length, size, tour, own_bike) {
-
+  
   console.log('day:', day.value);
   console.log('month:', month.value);
   console.log('year:', year.value);
   console.log('length:', length.value);
   console.log('size:', size.value);
   console.log('tour:', tour.value);
-
+  
   console.log('own_bike:', own_bike);
   console.log('own_bike.checked:', own_bike.checked);
   console.log('own_bike.value:', own_bike.value);
-
+  
   // Don't reload the page.
   return false;
 }

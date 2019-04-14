@@ -15,35 +15,44 @@
  */
 
 const main = () => {
-
+  
   /**
    * @type {PositionListener}
    */
   let watchingListener = undefined;
-
+  
   console.log('userAgent: ', window.navigator.userAgent);
-
-  document.getElementById('getCurrentPosition').addEventListener("click",
-      (event) => {
-        const listener = PositionListener.getCurrentPosition();
-      });
-
-  document.getElementById('watchPosition').addEventListener("click",
-      (event) => {
-        if (watchingListener) {
-          console.error('Already watching a position');
-          return;
-        }
-        watchingListener = PositionListener.watchPosition();
-      });
-
-  document.getElementById('clearWatch').addEventListener("click",
-      (event) => {
-        if (watchingListener) {
-          watchingListener.clearWatch();
-          watchingListener = undefined;
-        }
-      });
+  
+  document.getElementById('getCurrentPosition')
+          .addEventListener(
+              "click",
+              (event) => {
+                const listener = PositionListener.getCurrentPosition();
+              }
+          );
+  
+  document.getElementById('watchPosition')
+          .addEventListener(
+              "click",
+              (event) => {
+                if (watchingListener) {
+                  console.error('Already watching a position');
+                  return;
+                }
+                watchingListener = PositionListener.watchPosition();
+              }
+          );
+  
+  document.getElementById('clearWatch')
+          .addEventListener(
+              "click",
+              (event) => {
+                if (watchingListener) {
+                  watchingListener.clearWatch();
+                  watchingListener = undefined;
+                }
+              }
+          );
 };
 
 // Attach to window lifecycle events.
@@ -53,7 +62,8 @@ const main = () => {
  */
 window.addEventListener('beforeunload', (event) => {
   if (watchId) {
-    assertGeoIsAvailable().clearWatch(watchId);
+    assertGeoIsAvailable()
+        .clearWatch(watchId);
     console.log('clear watchId')
   }
   // Cancel the event as stated by the standard.
@@ -62,10 +72,12 @@ window.addEventListener('beforeunload', (event) => {
   event.returnValue = '';
 });
 
-window.addEventListener('DOMContentLoaded',
+window.addEventListener(
+    'DOMContentLoaded',
     (event) => {
       main();
-    });
+    }
+);
 
 // Helper functions.
 
@@ -82,11 +94,12 @@ const assertGeoIsAvailable = () => {
 
 class PositionListener {
   /**
-   * Why does this work? Since onFailure & onSuccess is defined using regular method
-   * syntax, it will acquire the context of the instance that invoked it
+   * Why does this work? Since onFailure & onSuccess is defined using regular
+   * method syntax, it will acquire the context of the instance that invoked it
    * (this in the example above). And since arrow functions are lexically
    * scoped, this will be the current instance of our class.
-   * More info: https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
+   * More info:
+   * https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
    * @return {PositionListener}
    */
   static getCurrentPosition() {
@@ -95,16 +108,18 @@ class PositionListener {
     window.navigator.geolocation.getCurrentPosition(
         (arg) => listener.onSuccess(arg),
         (arg) => listener.onFailure(arg),
-        listener.lowAccuracyOptions);
+        listener.lowAccuracyOptions
+    );
     return listener;
   }
-
+  
   /**
-   * Why does this work? Since onFailure & onSuccess is defined using regular method
-   * syntax, it will acquire the context of the instance that invoked it
+   * Why does this work? Since onFailure & onSuccess is defined using regular
+   * method syntax, it will acquire the context of the instance that invoked it
    * (this in the example above). And since arrow functions are lexically
    * scoped, this will be the current instance of our class.
-   * More info: https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
+   * More info:
+   * https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
    * @return {PositionListener}
    */
   static watchPosition() {
@@ -113,14 +128,15 @@ class PositionListener {
     listener.watchId = window.navigator.geolocation.watchPosition(
         (arg) => listener.onSuccess(arg),
         (arg) => listener.onFailure(arg),
-        listener.lowAccuracyOptions);
+        listener.lowAccuracyOptions
+    );
     return listener;
   }
-
+  
   constructor() {
     this.watchId = undefined;
   }
-
+  
   clearWatch() {
     if (this.watchId) {
       window.navigator.geolocation.clearWatch(this.watchId);
@@ -128,38 +144,38 @@ class PositionListener {
       this.watchId = undefined;
     }
   };
-
+  
   /**
    * @param {Position} position
    */
   onSuccess(position) {
     const {latitude: lat, longitude: lng} = position.coords;
     console.log(lat, lng);
-
+    
     if (this.watchId) {
       document.getElementById(
           'latLng').innerText = `${this.watchId}, ${new Date()}: ${lat}, ${lng}`;
-
+      
     } else {
       document.getElementById(
           'latLng').innerText = `${lat}, ${lng}`;
-
+      
     }
   };
-
+  
   /**
    * @param {PositionError} error
    */
   onFailure(error) {
     console.error(error.message);
   };
-
+  
   lowAccuracyOptions = {
     maximumAge: 0,
     timeout: 5000,
     enableHighAccuracy: false,
   };
-
+  
   highAccuracyOptions = {
     maximumAge: 0,
     timeout: 5000,

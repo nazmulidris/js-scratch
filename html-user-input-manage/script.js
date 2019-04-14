@@ -22,7 +22,7 @@ const Selector = {
 
 const getAllTopLevelContainerDivs = () => {
   return document.querySelectorAll(
-    `div[${Selector.DATA_SCOPE}]`);
+      `div[${Selector.DATA_SCOPE}]`);
 };
 
 const getScopeName = (div) => {
@@ -54,12 +54,12 @@ const getSelectElement = (parentDiv) => {
 const getSelectedNestedDiv = (parentDiv) => {
   const selectValue = getSelectElement(parentDiv).value;
   return parentDiv.querySelector(
-    `div[${Selector.DATA_DROPDOWN}="${selectValue}"]`);
+      `div[${Selector.DATA_DROPDOWN}="${selectValue}"]`);
 };
 
 const getAllNestedDivs = (parentDiv) => {
   return parentDiv.querySelectorAll(
-    `div[${Selector.DATA_DROPDOWN}]`)
+      `div[${Selector.DATA_DROPDOWN}]`)
 };
 
 const getDivForScope = (scopeName) => {
@@ -75,14 +75,14 @@ const handleNestedDivVisibility = () => {
   const parentDiv = getParentOfNestedDivs();
   const selectElement = parentDiv.querySelector('select');
   selectElement.addEventListener(
-    'change',
-    () => {
-      const parentDiv = getParentOfNestedDivs();
-      const nestedDivs = getAllNestedDivs(parentDiv);
-      nestedDivs.forEach((div) => div.style.display = 'none');
-      getSelectedNestedDiv(parentDiv).style.display = 'block';
-      // console.log('nested div visibility changed');
-    }
+      'change',
+      () => {
+        const parentDiv = getParentOfNestedDivs();
+        const nestedDivs = getAllNestedDivs(parentDiv);
+        nestedDivs.forEach((div) => div.style.display = 'none');
+        getSelectedNestedDiv(parentDiv).style.display = 'block';
+        // console.log('nested div visibility changed');
+      }
   );
   fireChangeEventOnSelectElement(selectElement);
 };
@@ -111,8 +111,8 @@ const generatePojosFromUi = () => {
 };
 
 /**
- * Returns an object containing key-value pairs for the input & select elements contained
- * in the given div.
+ * Returns an object containing key-value pairs for the input & select elements
+ * contained in the given div.
  *
  * Input elements include:
  * - select element
@@ -162,20 +162,20 @@ const attachListenersToUi = () => {
   };
   
   getAllTopLevelContainerDivs()
-    .forEach((div) => attachListenersToUiForScope(div));
+      .forEach((div) => attachListenersToUiForScope(div));
 };
 
 /**
  * Given the pojos, apply the key-value pairs to the DOM, so that it reflects
- * what is in the pojos. It calls generatePojosFromUi() once its completed updating
- * the DOM.
+ * what is in the pojos. It calls generatePojosFromUi() once its completed
+ * updating the DOM.
  */
 const applyPojosToUi = (pojos) => {
   const applyToUi = (divForScope, pojo) => {
     Object.keys(pojo)
           .forEach((key) => {
             const element = divForScope.querySelector(
-              `input[name="${key}"], select[name="${key}"]`);
+                `input[name="${key}"], select[name="${key}"]`);
             if (element !== null) {
               const value = pojo[key];
               const type = element.type;
@@ -200,7 +200,8 @@ const applyPojosToUi = (pojos) => {
           const div = getDivForScope(key);
           switch (key) {
             case Selector.DATA_DROPDOWN:
-              // Ignore this, since it is used only to store the value of the dropdown.
+              // Ignore this, since it is used only to store the value of the
+              // dropdown.
               break;
             case Selector.DATA_SCOPE_WITH_NESTING:
               const savedSelectValue = pojos[Selector.DATA_DROPDOWN];

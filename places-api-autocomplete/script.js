@@ -16,7 +16,7 @@
 
 function initMap() {
   console.log('initMap');
-
+  
   const pacInputElement = document.getElementById('pac-input');
   const autocomplete = new google.maps.places.Autocomplete(pacInputElement);
   autocomplete.addListener('place_changed', () => {
@@ -25,7 +25,7 @@ function initMap() {
     const latLngString = getLatLngString(placeResult);
     console.log('latLngString: ', latLngString);
   });
-
+  
 }
 
 /**

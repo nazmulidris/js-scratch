@@ -23,12 +23,14 @@ const Selector = {
 };
 
 // Add change event listener to the select element.
-getElement(Selector['ice-cream-select']).addEventListener(
-    'change',
-    (event) => {
-      const value = event.target.value;
-      getElement(Selector['result-div']).textContent = `You like ${value}`;
-    });
+getElement(Selector['ice-cream-select'])
+    .addEventListener(
+        'change',
+        (event) => {
+          const value = event.target.value;
+          getElement(Selector['result-div']).textContent = `You like ${value}`;
+        }
+    );
 
 /**
  * Programmatically change the option that's selected in the HTML select

@@ -35,8 +35,8 @@ const currentPositionAsyncButtonHandler = async () => {
 
 /**
  * This function doesn't work, because it returns immediately before the
- * getCurrentPosition() method returns anything. Calling this function will always
- * return undefined.
+ * getCurrentPosition() method returns anything. Calling this function will
+ * always return undefined.
  */
 const invokeGetCurrentPositionAsync = async () => {
   const options = {
@@ -45,14 +45,14 @@ const invokeGetCurrentPositionAsync = async () => {
     maximumAge: 0
   };
   window.navigator.geolocation.getCurrentPosition(
-    (position) => {
-      console.log(position);
-      return position;
-    },
-    (error) => {
-      throw error;
-    },
-    options
+      (position) => {
+        console.log(position);
+        return position;
+      },
+      (error) => {
+        throw error;
+      },
+      options
   );
 };
 
@@ -79,7 +79,7 @@ const currentPositionPromiseButtonHandler = async () => {
     const position = await invokeGetCurrentPositionPromise();
     console.log(position);
     updateUi(JSON.stringify(
-      getLatLngFromPosition(position), null, 2));
+        getLatLngFromPosition(position), null, 2));
     
     updateUi('fetchReverseGeocode()...');
     const reverseGeocode = await fetchReverseGeocode(position);
@@ -103,10 +103,10 @@ const fetchReverseGeocode = async (position) => {
   const format = 'jsonv2';
   const latLng = getLatLngFromPosition(position);
   const url = `https://nominatim.openstreetmap.org/reverse?format=${
-    format}&lat=${latLng.lat}&lon=${latLng.lng}`;
+      format}&lat=${latLng.lat}&lon=${latLng.lng}`;
   return await fetch(url)
-    .then((response) => response.json())
-    .then((json) => json);
+      .then((response) => response.json())
+      .then((json) => json);
 };
 
 // Helper functions.
