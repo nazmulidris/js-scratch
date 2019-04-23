@@ -16,6 +16,7 @@
             -   using `object-fit` <https://stackoverflow.com/a/38926886/2085356>
         -   `background-size:cover` and `background-image` _show in this sample_
             -   <https://stackoverflow.com/a/28673116/2085356>
+            -   <https://developer.mozilla.org/en-US/docs/Web/CSS/background-position>
         -   `overflow:hidden`
             -   not center crop <https://stackoverflow.com/a/15167593/2085356>
         -   `overflow:hidden` and js to change the css so that it center crops

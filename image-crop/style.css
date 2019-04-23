@@ -1,3 +1,7 @@
+:root {
+  --image-breadth: 315px;
+}
+
 .my-style {
   --custom-property: none; /** Set this in JS */
   font-style: var(--custom-property);
@@ -6,4 +10,19 @@
 body {
   font-family: "Fira Code Medium";
   font-size: 12pt;
+}
+
+.object-fit-cover {
+  width: var(--image-breadth);
+  height: var(--image-breadth);
+  object-fit: cover;
+}
+
+.background-image-size-cover {
+  background-image: url("rectangle.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: var(--image-breadth);
+  height: var(--image-breadth);
 }
