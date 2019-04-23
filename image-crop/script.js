@@ -1,7 +1,7 @@
 const setAndGetCustomProperty = () => {
   console.log(element);
   printValue();
-  element.style.setProperty(customPropertyName, 'abc');
+  element.style.setProperty(customPropertyName, 'italic');
   printValue();
 };
 

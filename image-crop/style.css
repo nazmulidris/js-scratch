@@ -1,8 +1,9 @@
+.my-style {
+  --custom-property: none; /** Set this in JS */
+  font-style: var(--custom-property);
+}
+
 body {
   font-family: "Fira Code Medium";
   font-size: 12pt;
-}
-
-.my-style {
-  --custom-property: none /** Set this in JS */
 }
