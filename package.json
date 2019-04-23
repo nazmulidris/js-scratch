@@ -21,9 +21,11 @@
   },
   "dependencies": {},
   "scripts": {
-    "remark-lint": "remark . -o"
+    "remark": "remark . -o"
   },
   "remarkConfig": {
-    "plugins": ["remark-preset-lint-recommended"]
+    "plugins": [
+      "remark-preset-lint-recommended"
+    ]
   }
 }
