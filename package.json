@@ -1,0 +1,19 @@
+{
+  "name": "js-scratch",
+  "version": "1.0.0",
+  "description": "JS learning",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nazmulidris/js-scratch.git"
+  },
+  "author": "Nazmul Idris",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nazmulidris/js-scratch/issues"
+  },
+  "homepage": "https://github.com/nazmulidris/js-scratch#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-google": "^0.12.0"
+  }
+}
