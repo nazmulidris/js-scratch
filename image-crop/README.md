@@ -1,6 +1,12 @@
 # Set / get custom properties / CSS variables
 
 -   <https://developer.mozilla.org/en-US/docs/Web/CSS/var>
+-   <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
+-   <https://developer.mozilla.org/en-US/docs/Web/CSS/:root>
+-   <https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle>
+-   <https://zellwk.com/blog/css-values-in-js/>
+-   <https://stackoverflow.com/questions/41725725/access-css-variable-from-javascript>
+-   <https://www.broken-links.com/2014/08/28/css-variables-updating-custom-properties-javascript/>
 
 # Crop rectangular image to square
 

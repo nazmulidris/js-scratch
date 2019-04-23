@@ -1,20 +1,19 @@
-const getStyleProperty = (element, propertyName) => {
-  return element.style[propertyName];
-  // The following doesn't work unless it's a valid CSS property name.
-  // return element.style.getPropertyValue(propertyName);
-};
-
-const setStyleProperty = (element, propertyName, value) => {
-  element.style[propertyName] = value;
-};
-
-const setAndGetProperty = () => {
-  const propertyName = 'my-property';
-  const element = document.getElementById('my_div');
-  setStyleProperty(element, propertyName, 'testValue');
-  const value = getStyleProperty(element, propertyName);
+const setAndGetCustomProperty = () => {
   console.log(element);
-  console.log('propertyName:', propertyName, 'value:', value);
+  printValue();
+  element.style.setProperty(customPropertyName, 'abc');
+  printValue();
 };
 
-setAndGetProperty();
+const printValue = () => {
+  // More info: https://stackoverflow.com/a/41725772/2085356
+  // const value = element.style.getPropertyValue(customPropertyName);
+  const value = window.getComputedStyle(element).getPropertyValue(
+      customPropertyName);
+  console.log('customPropertyName:', customPropertyName, 'value:', value);
+};
+
+const customPropertyName = '--custom-property';
+const element = document.querySelector('.my-style');
+
+setAndGetCustomProperty();
