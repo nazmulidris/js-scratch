@@ -8,7 +8,7 @@ const setStyleProperty = (element, propertyName, value) => {
   element.style[propertyName] = value;
 };
 
-const main = () => {
+const setAndGetProperty = () => {
   const propertyName = 'my-property';
   const element = document.getElementById('my_div');
   setStyleProperty(element, propertyName, 'testValue');
@@ -17,4 +17,4 @@ const main = () => {
   console.log('propertyName:', propertyName, 'value:', value);
 };
 
-main();
+setAndGetProperty();

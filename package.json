@@ -14,6 +14,16 @@
   "homepage": "https://github.com/nazmulidris/js-scratch#readme",
   "devDependencies": {
     "eslint": "^5.16.0",
-    "eslint-config-google": "^0.12.0"
+    "eslint-config-google": "^0.12.0",
+    "remark-cli": "^6.0.1",
+    "remark-lint": "^6.0.4",
+    "remark-preset-lint-recommended": "^3.0.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "remark-lint": "remark . -o"
+  },
+  "remarkConfig": {
+    "plugins": ["remark-preset-lint-recommended"]
   }
 }
