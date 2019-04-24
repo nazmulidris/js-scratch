@@ -15,19 +15,10 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.12.0",
-    "remark-cli": "^6.0.1",
-    "remark-lint": "^6.0.4",
-    "remark-lint-maximum-line-length": "^1.2.0",
-    "remark-preset-lint-recommended": "^3.0.2"
+    "prettier": "^1.17.0"
   },
   "dependencies": {},
   "scripts": {
-    "remark": "remark . -o"
-  },
-  "remarkConfig": {
-    "plugins": [
-      "remark-preset-lint-recommended",
-      "remark-lint-maximum-line-length"
-    ]
+    "prettier": "prettier --write '**/*.md'"
   }
 }
