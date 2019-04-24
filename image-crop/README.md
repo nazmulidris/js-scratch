@@ -10,7 +10,7 @@
 
 # More about styles vs computed styles
 
-![Image of computed style vs style](computed-style-vs-style.jpg)
+<img src="computed-style-vs-style.jpg" width="50%">
 
 # Crop rectangular image to square
 
