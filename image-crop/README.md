@@ -8,6 +8,10 @@
 - <https://stackoverflow.com/questions/41725725/access-css-variable-from-javascript>
 - <https://www.broken-links.com/2014/08/28/css-variables-updating-custom-properties-javascript/>
 
+# More about styles vs computed styles
+
+![Image of computed style vs style](computed-style-vs-style.jpg)
+
 # Crop rectangular image to square
 
 - How is rectangular image displayed into a square
