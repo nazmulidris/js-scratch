@@ -26,12 +26,12 @@ const originalSvgImage = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2064%20
  * @return {string}
  */
 const processImage = (svg, fgColor, bgColor) => {
-  const pattern = /fill%3D%22%23(?<hex>[A-Fa-f0-9]{3,6})%22/g;
+  const pattern = /fill%3D%22%23(?<color>[A-Fa-f0-9]{3,6})%22/g;
   const allColors = new Set(
       Array.from(svg.matchAll(pattern)).map(
           ({groups}) => {
             console.log(groups);
-            return groups.hex;
+            return groups.color;
           }));
   console.log(allColors);
 
@@ -84,6 +84,92 @@ const processImage = (svg, fgColor, bgColor) => {
   return processedSvg;
 };
 
+// https://stackoverflow.com/questions/15604140/replace-multiple-strings-with-multiple-other-strings/15605648
+const process_vEncoded = (svg, options) => {
+  // Validation.
+  const pattern = /fill%3D%22%23(?<color>[A-Fa-f0-9]{3,6})%22/g;
+  const allColors = new Set(
+      Array.from(svg.matchAll(pattern)).map(
+          ({groups}) => {
+            console.log(groups);
+            return groups.color;
+          }));
+  if (allColors.length < 2) {
+    throw new Error(
+        'image is expected to have at least 2 colors');
+  }
+  if (!allColors.has('FFF')) {
+    throw new Error(
+        'image is expected to have at least fg color FFF');
+  }
+
+  // Go thru options and URL encode the colors, also replace any '#' prefix.
+  for (let key in options) {
+    console.log(options[key]);
+    options[key] = encodeURIComponent(options[key].replace(/#/g, ''));
+    console.log(options[key]);
+  }
+  let {bgColor, fgColor} = options;
+
+  // Search and replace colors.
+  const bgColorPattern = /fill%3D%22%23(?!f{3,6})[a-f0-9]{3,6}%22/gi;
+  const fgColorPattern = /fill%3D%22%23f{3,6}%22/gi;
+
+  return svg.replace(
+      /fill%3D%22%23(?!f{3,6})[a-f0-9]{3,6}%22|fill%3D%22%23f{3,6}%22/gi,
+      function (matched) {
+        if (matched.match(bgColorPattern)) {
+          return `fill%3D%22%23${bgColor}%22`;
+        }
+        return `fill%3D%22%23${fgColor}%22`;
+      });
+};
+
+// https://stackoverflow.com/questions/15604140/replace-multiple-strings-with-multiple-other-strings/15605648
+const process_vDecoded = (svg, options) => {
+  let decodedSvg = decodeURIComponent(svg.split(',')[1]);
+
+  // Validation.
+  const pattern = /fill="#(?<color>[A-Fa-f0-9]{3,6})"/g;
+  const allColors = new Set(
+      Array.from(decodedSvg.matchAll(pattern)).map(
+          ({groups}) => {
+            console.log(groups);
+            return groups.color;
+          }));
+  if (allColors.length < 2) {
+    throw new Error(
+        'image is expected to have at least 2 colors');
+  }
+  if (!allColors.has('FFF')) {
+    throw new Error(
+        'image is expected to have at least fg color FFF');
+  }
+
+  // Go thru the options and replace any '#' prefix.
+  for (let key in options) {
+    console.log(options[key]);
+    options[key] = options[key].replace(/#/g, '');
+    console.log(options[key]);
+  }
+  let {bgColor, fgColor} = options;
+
+  // Search and replace colors.
+  const bgColorPattern = /fill="#(?!f{3,6})[a-f0-9]{3,6}"/gi;
+  const fgColorPattern = /fill="#f{3,6}"/gi;
+
+  decodedSvg = decodedSvg.replace(
+      /fill="#(?!f{3,6})[a-f0-9]{3,6}"|fill="#f{3,6}"/gi,
+      function (matched) {
+        if (matched.match(bgColorPattern)) {
+          return `fill="#${bgColor}"`;
+        }
+        return `fill="#${fgColor}"`;
+      });
+
+  return 'data:image/svg+xml,' + encodeURIComponent(decodedSvg);
+};
+
 document.getElementById('icon1').src = originalSvgImage;
 document.getElementById('icon2').src =
     processImage(originalSvgImage, '#8B0000', undefined);
@@ -95,3 +181,7 @@ document.getElementById('icon4').src =
     processImage(originalSvgImage, '#8B0000', '#74DBFF');
 document.getElementById('icon5').src =
     processImage(originalSvgImage, '#00000000', undefined);
+document.getElementById('icon6').src = process_vEncoded(originalSvgImage,
+    {fgColor: '#8B0000', bgColor: '#74DBFF'});
+document.getElementById('icon7').src = process_vDecoded(originalSvgImage,
+    {fgColor: '#8B0000', bgColor: '#74DBFF'});
