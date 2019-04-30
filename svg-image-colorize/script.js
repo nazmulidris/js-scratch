@@ -170,18 +170,20 @@ const process_vDecoded = (svg, options) => {
   return 'data:image/svg+xml,' + encodeURIComponent(decodedSvg);
 };
 
-document.getElementById('icon1').src = originalSvgImage;
-document.getElementById('icon2').src =
-    processImage(originalSvgImage, '#8B0000', undefined);
-document.getElementById('icon3').src =
-    processImage(originalSvgImage, undefined, '#74DBFF');
-document.getElementById('icon3').src =
-    processImage(originalSvgImage, undefined, '#74DBFF');
-document.getElementById('icon4').src =
-    processImage(originalSvgImage, '#8B0000', '#74DBFF');
-document.getElementById('icon5').src =
-    processImage(originalSvgImage, '#00000000', undefined);
-document.getElementById('icon6').src = process_vEncoded(originalSvgImage,
-    {fgColor: '#8B0000', bgColor: '#74DBFF'});
-document.getElementById('icon7').src = process_vDecoded(originalSvgImage,
-    {fgColor: '#8B0000', bgColor: '#74DBFF'});
+{
+  document.getElementById('icon1').src = originalSvgImage;
+  document.getElementById('icon2').src =
+      processImage(originalSvgImage, '#8B0000', undefined);
+  document.getElementById('icon3').src =
+      processImage(originalSvgImage, undefined, '#74DBFF');
+  document.getElementById('icon3').src =
+      processImage(originalSvgImage, undefined, '#74DBFF');
+  document.getElementById('icon4').src =
+      processImage(originalSvgImage, '#8B0000', '#74DBFF');
+  document.getElementById('icon5').src =
+      processImage(originalSvgImage, '#00000000', undefined);
+  document.getElementById('icon6').src = process_vEncoded(originalSvgImage,
+      {fgColor: '#8B0000', bgColor: '#74DBFF'});
+  document.getElementById('icon7').src = process_vDecoded(originalSvgImage,
+      {fgColor: '#8B0000', bgColor: '#74DBFF'});
+}
