@@ -20,7 +20,7 @@ const originalSvgImage = 'data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2064%20
  * Note: to remove glyph, simply set bgColor to transparent hex color.
  * Note: throw exceptions if colors aren't what is expected.
  *
- * @param {string} svg
+ * @param {string} svg contains URL encoded data
  * @param {string} fgColor ex: 'EEE', or '#EEE'
  * @param {string} bgColor ex: 'ABC', or '#ABC'
  * @return {string}
@@ -65,21 +65,23 @@ const processImage = (svg, fgColor, bgColor) => {
     }
   }
 
-  let decodedSvg = decodeURIComponent(svg.split(',')[1]);
+  let processedSvg = svg;
 
   // Process fgColor.
   if (foregroundColor) {
-    decodedSvg = decodedSvg.replace('#FFF', foregroundColor);
+    processedSvg = processedSvg.replace('%23FFF',
+        encodeURIComponent(foregroundColor));
   }
 
   // Process bgColor.
   if (backgroundColor) {
     for (const color of bgColors) {
-      decodedSvg = decodedSvg.replace('#' + color, backgroundColor);
+      processedSvg = processedSvg.replace('%23' + color,
+          encodeURIComponent(backgroundColor));
     }
   }
 
-  return 'data:image/svg+xml,' + encodeURIComponent(decodedSvg);
+  return processedSvg;
 };
 
 document.getElementById('icon1').src = originalSvgImage;
