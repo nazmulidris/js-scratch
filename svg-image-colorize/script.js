@@ -36,7 +36,7 @@ const processImage = (svg, fgColor, bgColor) => {
   console.log(allColors);
 
   // Validation.
-  if (allColors.length < 2) {
+  if (allColors.size < 2) {
     throw new Error(
         'image is expected to have at least 2 colors');
   }
@@ -94,7 +94,7 @@ const process_vEncoded = (svg, options) => {
             console.log(groups);
             return groups.color;
           }));
-  if (allColors.length < 2) {
+  if (allColors.size < 2) {
     throw new Error(
         'image is expected to have at least 2 colors');
   }
@@ -137,7 +137,7 @@ const process_vDecoded = (svg, options) => {
             console.log(groups);
             return groups.color;
           }));
-  if (allColors.length < 2) {
+  if (allColors.size < 2) {
     throw new Error(
         'image is expected to have at least 2 colors');
   }
