@@ -15,10 +15,10 @@
  */
 
 const main = () => {
-  document.documentElement.addEventListener(
+  const rootElement = document.documentElement;
+  rootElement.addEventListener(
       'keyup',
       keyUpListener('input', (eventTarget) => {
-        const rootElement = document.documentElement;
         switch (eventTarget.name) {
           case "font-family":
             rootElement.style.setProperty(
