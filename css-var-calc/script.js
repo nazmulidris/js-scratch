@@ -15,30 +15,44 @@
  */
 
 const main = () => {
-  document.querySelector('#root')
-          .addEventListener(
-              'keyup', (event) => {
-                const inputMatches = event.target.matches('input');
-                if (!inputMatches) return;
-                if (event.key === "Enter") {
-                  const inputElement = event.target;
-                  const rootElement = document.documentElement;
-                  switch (inputElement.name) {
-                    case "font-family":
-                      rootElement.style.setProperty(
-                          '--page-font',
-                          inputElement.value
-                      );
-                      break;
-                    case "font-size":
-                      rootElement.style.setProperty(
-                          '--page-font-size',
-                          inputElement.value
-                      );
-                      break;
-                  }
-                }
-              })
+  document.documentElement.addEventListener(
+      'keyup',
+      keyUpListener('input', (eventTarget) => {
+        const rootElement = document.documentElement;
+        switch (eventTarget.name) {
+          case "font-family":
+            rootElement.style.setProperty(
+                '--page-font',
+                eventTarget.value
+            );
+            break;
+          case "font-size":
+            rootElement.style.setProperty(
+                '--page-font-size',
+                eventTarget.value
+            );
+            break;
+        }
+      })
+  );
+};
+
+/**
+ * Generates an event listener that executes the block function when 'Enter' key
+ * is pressed on the element for the selector.
+ *
+ * @param selector
+ * @param block accepts an event target parameter
+ * @returns {Function} accepts an event parameter
+ */
+const keyUpListener = (selector, block) => {
+  return (event) => {
+    const targetMatches = event.target.matches(selector);
+    if (!targetMatches) return;
+    if ((event.key === 'Enter')) {
+      block(event.target);
+    }
+  }
 };
 
 main();
