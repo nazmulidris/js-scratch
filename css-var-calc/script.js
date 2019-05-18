@@ -18,18 +18,18 @@ const main = () => {
   const rootElement = document.documentElement;
   rootElement.addEventListener(
       'keyup',
-      keyUpListener('input', (eventTarget) => {
-        switch (eventTarget.name) {
+      keyUpListener('input', (inputElement) => {
+        switch (inputElement.name) {
           case "font-family":
             rootElement.style.setProperty(
                 '--page-font',
-                eventTarget.value
+                inputElement.value
             );
             break;
           case "font-size":
             rootElement.style.setProperty(
                 '--page-font-size',
-                eventTarget.value
+                inputElement.value
             );
             break;
         }
@@ -39,11 +39,13 @@ const main = () => {
 
 /**
  * Generates an event listener that executes the block function when 'Enter' key
- * is pressed on the element for the selector.
+ * is pressed on the element for the selector. The element that the selector
+ * matches is passed to the block function. The function that's returned
+ * accepts an Event parameter.
  *
  * @param selector
- * @param block accepts an event target parameter
- * @returns {Function} accepts an event parameter
+ * @param block accepts a parameter (element that matches the selector)
+ * @returns {function(Event)} accepts an event parameter
  */
 const keyUpListener = (selector, block) => {
   return (event) => {
