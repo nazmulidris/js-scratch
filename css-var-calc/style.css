@@ -42,12 +42,12 @@
 
 /* Scoped variables */
 #container1 {
-  --background-color: cornflowerblue;
+  --background-color: lightpink;
   background-color: var(--background-color);
 }
 
 /* Scoped variables */
 #container2 {
-  --background-color: lightyellow;
+  --background-color: lightpink;
   background-color: var(--background-color);
 }

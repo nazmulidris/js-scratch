@@ -12,3 +12,6 @@ CSS box sizing
 
 HTML input event
 - https://stackoverflow.com/questions/7060750/detect-the-enter-key-in-a-text-input-field
+
+JavaScript fire change event
+- https://stackoverflow.com/a/36648958/2085356

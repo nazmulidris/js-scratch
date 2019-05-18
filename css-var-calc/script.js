@@ -15,22 +15,50 @@
  */
 
 const main = () => {
-  const rootElement = document.documentElement;
-  document.querySelector("#page")
+  document.querySelector('#page')
           .addEventListener(
-              "keyup",
-              keyUpListener("input", inputElement => {
+              'keyup',
+              keyUpListener('input', inputElement => {
+                const rootElement = document.documentElement;
                 switch (inputElement.name) {
-                  case "font-family":
+                  case 'font-family':
                     rootElement.style.setProperty(
-                        "--page-font", inputElement.value);
+                        '--page-font', inputElement.value);
                     break;
-                  case "font-size":
+                  case 'font-size':
                     rootElement.style.setProperty(
-                        "--page-font-size", inputElement.value);
+                        '--page-font-size', inputElement.value);
                     break;
                 }
               })
+          );
+  
+  const container1Div = document.querySelector('#container1');
+  container1Div.addEventListener(
+      'change',
+      filterSelector('select', (selectElement) => {
+        const value = selectElement.value;
+        container1Div.style.setProperty(
+            '--background-color', value);
+      })
+  );
+  
+  const container2Div = document.querySelector('#container2');
+  container2Div.addEventListener(
+      'change',
+      filterSelector('select', (selectElement) => {
+        const value = selectElement.value;
+        container2Div.style.setProperty(
+            '--background-color', value);
+      })
+  );
+  
+  document.querySelectorAll('select')
+          .forEach(
+              (selectElement) => {
+                selectElement
+                    .dispatchEvent(new Event('change', {bubbles: true}));
+              }
           );
 };
 
@@ -45,13 +73,26 @@ const main = () => {
  * @returns {function(Event)} accepts an event parameter
  */
 const keyUpListener = (selector, block) => {
-  return event => {
+  return (event) => {
     const targetMatches = event.target.matches(selector);
     if (!targetMatches) return;
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       block(event.target);
     }
   };
+};
+
+/**
+ * @param selector the block only operates on elements matched by this
+ * @param block accepts a parameter (element that matches the selector)
+ * @returns {function(Event)} function accepts an Event parameter
+ */
+const filterSelector = (selector, block) => {
+  return (event) => {
+    const targetMatches = event.target.matches(selector);
+    if (!targetMatches) return;
+    block(event.target);
+  }
 };
 
 main();
