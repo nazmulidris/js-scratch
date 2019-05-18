@@ -15,38 +15,35 @@
   -->
 
 <html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <title>CSS variables and calc</title>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="style.css">
-  <title>CSS variables and calc</title>
-</head>
+  <body>
+    <div id="page" class="box-outline-with-padding">
+      <input name="font-family" type="text" placeholder="Fira Code, Arimo" />
+      <input name="font-size" type="text" placeholder="12pt, 14pt" />
+    </div>
 
-<body>
+    <div id="container1" class="box-outline-with-padding">
+      <select name="container-background-color">
+        <option>lightgreen</option>
+        <option>lightblue</option>
+        <option>lightgray</option>
+      </select>
+      Pick color from dropdown
+    </div>
 
-<div id="page" class="box-outline-with-padding">
-  <input name="font-family" type="text" placeholder="Fira Code, Arimo"/>
-  <input name="font-size" type="text" placeholder="12pt, 14pt"/>
-</div>
+    <div id="container2" class="box-outline-with-padding">
+      <select name="container-background-color">
+        <option>lightgreen</option>
+        <option>lightblue</option>
+        <option>lightgray</option>
+      </select>
+      Pick color from dropdown
+    </div>
 
-<div id="container1" class="box-outline-with-padding">
-  <select name="container-background-color">
-    <option>lightgreen</option>
-    <option>lightblue</option>
-    <option>lightgray</option>
-  </select>
-  Pick color from dropdown
-</div>
-
-<div id="container2" class="box-outline-with-padding">
-  <select name="container-background-color">
-    <option>lightgreen</option>
-    <option>lightblue</option>
-    <option>lightgray</option>
-  </select>
-  Pick color from dropdown
-</div>
-
-<script src="script.js"></script>
-</body>
-
+    <script src="script.js"></script>
+  </body>
 </html>

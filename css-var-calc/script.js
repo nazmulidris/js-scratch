@@ -16,49 +16,42 @@
 
 const main = () => {
   const rootElement = document.documentElement;
-  document.querySelector('#page')
+  document.querySelector("#page")
           .addEventListener(
-              'keyup',
-              keyUpListener(
-                  'input',
-                  (inputElement) => {
-                    switch (inputElement.name) {
-                      case "font-family":
-                        rootElement.style.setProperty(
-                            '--page-font',
-                            inputElement.value
-                        );
-                        break;
-                      case "font-size":
-                        rootElement.style.setProperty(
-                            '--page-font-size',
-                            inputElement.value
-                        );
-                        break;
-                    }
-                  }
-              )
+              "keyup",
+              keyUpListener("input", inputElement => {
+                switch (inputElement.name) {
+                  case "font-family":
+                    rootElement.style.setProperty(
+                        "--page-font", inputElement.value);
+                    break;
+                  case "font-size":
+                    rootElement.style.setProperty(
+                        "--page-font-size", inputElement.value);
+                    break;
+                }
+              })
           );
 };
 
 /**
  * Generates an event listener that executes the block function when 'Enter' key
  * is pressed on the element for the selector. The element that the selector
- * matches is passed to the block function. The function that's returned
- * accepts an Event parameter.
+ * matches is passed to the block function. The function that's returned accepts
+ * an Event parameter.
  *
  * @param selector
  * @param block accepts a parameter (element that matches the selector)
  * @returns {function(Event)} accepts an event parameter
  */
 const keyUpListener = (selector, block) => {
-  return (event) => {
+  return event => {
     const targetMatches = event.target.matches(selector);
     if (!targetMatches) return;
-    if ((event.key === 'Enter')) {
+    if (event.key === "Enter") {
       block(event.target);
     }
-  }
+  };
 };
 
 main();
