@@ -18,22 +18,25 @@ const main = () => {
   const rootElement = document.documentElement;
   rootElement.addEventListener(
       'keyup',
-      keyUpListener('input', (inputElement) => {
-        switch (inputElement.name) {
-          case "font-family":
-            rootElement.style.setProperty(
-                '--page-font',
-                inputElement.value
-            );
-            break;
-          case "font-size":
-            rootElement.style.setProperty(
-                '--page-font-size',
-                inputElement.value
-            );
-            break;
-        }
-      })
+      keyUpListener(
+          'input',
+          (inputElement) => {
+            switch (inputElement.name) {
+              case "font-family":
+                rootElement.style.setProperty(
+                    '--page-font',
+                    inputElement.value
+                );
+                break;
+              case "font-size":
+                rootElement.style.setProperty(
+                    '--page-font-size',
+                    inputElement.value
+                );
+                break;
+            }
+          }
+      )
   );
 };
 
