@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* Global variables */
+/* Global variables (CSS custom properties). */
 :root {
   --page-font: "Fira Code";
   --page-font-size: 12pt;
@@ -33,6 +33,7 @@
   font-size: var(--page-font-size);
 }
 
+/* Using calc & variables to provide even padding around input elements. */
 #page input {
   --content-total-width: calc(100% / 2);
   --padding-exclude-width: calc(var(--border-width) / 2);
@@ -47,13 +48,13 @@
   margin: var(--border-width);
 }
 
-/* Scoped variables */
+/* Scoped variables. */
 #container1 {
   --background-color: lightpink;
   background-color: var(--background-color);
 }
 
-/* Scoped variables */
+/* Scoped variables. */
 #container2 {
   --background-color: lightpink;
   background-color: var(--background-color);
