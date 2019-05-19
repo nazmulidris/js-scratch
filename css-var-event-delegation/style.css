@@ -33,6 +33,11 @@
   font-size: var(--page-font-size);
 }
 
+#page input {
+  width: calc(100% / 2 - var(--border-width) / 2);
+  padding: calc(var(--border-width));
+}
+
 .box-outline-with-padding {
   border: 2px dotted var(--border-color);
   border-radius: var(--border-width);
