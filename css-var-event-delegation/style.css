@@ -34,8 +34,10 @@
 }
 
 #page input {
-  width: calc(100% / 2 - var(--border-width) / 2);
-  padding: calc(var(--border-width));
+  --content-total-width: calc(100% / 2);
+  --padding-exclude-width: calc(var(--border-width) / 2);
+  width: calc(var(--content-total-width) - var(--padding-exclude-width));
+  padding: calc(var(--padding-exclude-width));
 }
 
 .box-outline-with-padding {
