@@ -16,23 +16,23 @@
 
 const main = () => {
   document.querySelector('#page')
-          .addEventListener(
-              'keyup',
-              keyUpListener('input', inputElement => {
-                const rootElement = document.documentElement;
-                switch (inputElement.name) {
-                  case 'font-family':
-                    rootElement.style.setProperty(
-                        '--page-font', inputElement.value);
-                    break;
-                  case 'font-size':
-                    rootElement.style.setProperty(
-                        '--page-font-size', inputElement.value);
-                    break;
-                }
-              })
-          );
-  
+      .addEventListener(
+          'keyup',
+          keyUpListener('input', (inputElement) => {
+            const rootElement = document.documentElement;
+            switch (inputElement.name) {
+              case 'font-family':
+                rootElement.style.setProperty(
+                    '--page-font', inputElement.value);
+                break;
+              case 'font-size':
+                rootElement.style.setProperty(
+                    '--page-font-size', inputElement.value);
+                break;
+            }
+          })
+      );
+
   const container1Div = document.querySelector('#container1');
   container1Div.addEventListener(
       'change',
@@ -42,7 +42,7 @@ const main = () => {
             '--background-color', value);
       })
   );
-  
+
   const container2Div = document.querySelector('#container2');
   container2Div.addEventListener(
       'change',
@@ -52,14 +52,14 @@ const main = () => {
             '--background-color', value);
       })
   );
-  
+
   document.querySelectorAll('select')
-          .forEach(
-              (selectElement) => {
-                selectElement
-                    .dispatchEvent(new Event('change', {bubbles: true}));
-              }
-          );
+      .forEach(
+          (selectElement) => {
+            selectElement
+                .dispatchEvent(new Event('change', {bubbles: true}));
+          }
+      );
 };
 
 /**
@@ -68,9 +68,10 @@ const main = () => {
  * matches is passed to the block function. The function that's returned accepts
  * an Event parameter.
  *
- * @param selector
- * @param block accepts a parameter (element that matches the selector)
- * @returns {function(Event)} accepts an event parameter
+ * @param {string} selector
+ * @param {function(HTMLElement)} block accepts a parameter (element that
+ * matches the selector)
+ * @return {function(Event)} accepts an event parameter
  */
 const keyUpListener = (selector, block) => {
   return (event) => {
@@ -83,16 +84,17 @@ const keyUpListener = (selector, block) => {
 };
 
 /**
- * @param selector the block only operates on elements matched by this
- * @param block accepts a parameter (element that matches the selector)
- * @returns {function(Event)} function accepts an Event parameter
+ * @param {string} selector the block only operates on elements matched by this
+ * @param {function(HTMLElement)}block accepts a parameter (element that matches
+ * the selector)
+ * @return {function(Event)} function accepts an Event parameter
  */
 const filterSelector = (selector, block) => {
   return (event) => {
     const targetMatches = event.target.matches(selector);
     if (!targetMatches) return;
     block(event.target);
-  }
+  };
 };
 
 main();
