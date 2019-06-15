@@ -19,27 +19,55 @@ const mainRange = () => {
 };
 
 const testRange = () => {
-  const r1 = new Range(
-      Time.createFromString('0700'),
-      Time.createFromString('2000')
-  );
-  const r2 = new Range(
-      Time.createFromString('1100'),
-      Time.createFromString('1400')
-  );
-  const r3 = new Range(
-      Time.createFromString('1700'),
-      Time.createFromString('2100')
-  );
+  // End time ends up being earlier (less) than start time (due to utc offset).
+  {
+    const data = [{
+      'close': {
+        'day': 6,
+        'time': '2200',
+      },
+      'open': {
+        'day': 6,
+        'time': '1200',
+      },
+    }];
+    const ranges = Range.createRangesFrom(data, -420);
+    console.assert(ranges.length === 2,
+        'failed to split ranges that spill over Time.MAX boundary');
+  }
 
-  console.log('r1', r1);
-  console.log('r2', r2);
-  console.log('r3', r3);
+  // Spanning 3days.
+  {
+    const data = {
+      open: {day: 0, time: '0805'},
+      close: {day: 2, time: '1330'},
+      utcOffset: -420,
+    };
+    const range = new Range(
+        Time.createFromOpeningHoursTime(data.open, data.utcOffset),
+        Time.createFromOpeningHoursTime(data.close, data.utcOffset));
+    console.assert(range.startTime.timeInMinutes === 905,
+        'problem w/ range start time');
+    console.assert(range.endTime.timeInMinutes === 4110,
+        'problem w/ range start time');
+    console.log('Range spanning 3 days', range);
 
-  console.log('f 0600 is in r1: ', r1.isInRange(Time.createFromString('0600')));
-  console.log('t 1100 is in r2: ', r2.isInRange(Time.createFromString('1100')));
-  console.log('f 1400 is in r2: ', r2.isInRange(Time.createFromString('1400')));
-  console.log('t 1200 is in r2: ', r2.isInRange(Time.createFromString('1200')));
+    // Monday @ 2.25pm, should be in range.
+    {
+      const time = Time.createFromRequestedTime(
+          new Date('June 17 2019 2:25 pm'));
+      console.assert(range.isInRange(time),
+          `${time} should be in the range!`);
+    }
+
+    // Thursday @ 2.25pm, should not be in range.
+    {
+      const time = Time.createFromRequestedTime(
+          new Date('June 20 2019 2:25 pm'));
+      console.assert(!range.isInRange(time),
+          `${time} should not be in the range!`);
+    }
+  }
 };
 
 /**
@@ -49,6 +77,36 @@ const testRange = () => {
  * 2) given time < endTime.
  */
 class Range {
+  /**
+   * @param {Array<Object>} periods
+   * @param {number} utcOffset
+   * @return {Array<Range>}
+   */
+  static createRangesFrom(periods, utcOffset) {
+    /** @type{Array<Range>} */
+    const timeRanges = [];
+    periods.forEach((period) => {
+      const {open, close} = period;
+      const range = new Range(
+          Time.createFromOpeningHoursTime(open, utcOffset),
+          Time.createFromOpeningHoursTime(close, utcOffset)
+      );
+
+      // startTime (2) > endTime (1) ||
+      // endTime (1) < startTime (2)
+      if (range.endTime.compare(range.startTime) < 0) {
+        const range1 = new Range(range.startTime, new Time(Time.getMaxTime()));
+        const range2 = new Range(new Time(Time.getMinTime()), range.endTime);
+        timeRanges.push(range1);
+        timeRanges.push(range2);
+      } else {
+        timeRanges.push(range);
+      }
+    });
+
+    return timeRanges;
+  }
+
   /**
    * @param {Time} startTime
    * @param {Time} endTime

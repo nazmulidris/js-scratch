@@ -16,7 +16,7 @@
 
 const mainIndex = () => {
   console.log(
-      '?t isOpen(placeMultipleRangesPerDay, July 4 2019 5p)',
+      't isOpen(placeMultipleRangesPerDay, July 4 2019 (Thr) 5p)',
       isOpen(
           placeMultipleRangesPerDay,
           new Date('July 4 2019 5:00 pm')
@@ -40,25 +40,17 @@ const mainIndex = () => {
   );
 };
 
-const dayOfWeek = {
-  'Sunday': 0,
-  'Monday': 1,
-  'Tuesday': 2,
-  'Wednesday': 3,
-  'Thursday': 4,
-  'Friday': 5,
-  'Saturday': 6,
-};
-
-const endOfDayTime = Time.createFromString('2359');
-
 /**
- * @param {Object} place
+ * @param {Object} place Expected to contain `utc_offset` number, `periods`
+ * array.
  * @param {Date=} date
  * @return {boolean|undefined}
  */
 const isOpen = (place, date = new Date()) => {
-  const {periods, utc_offset: utcOffset} = place;
+  /** @type{Array<Object>} */
+  const periods = place.periods;
+  /** @type{number} */
+  const utcOffset = place.utc_offset;
 
   if (!periods || !utcOffset) {
     return undefined;
@@ -76,19 +68,20 @@ const isOpen = (place, date = new Date()) => {
   // period.getClose() would never be null. See
   // https://developers.google.com/places/web-service/details#PlaceDetailsResults
   // opening_hours section for details.
-  periods.forEach((period)=>{
-    if (!period.open || !period.close) return undefined;
+  periods.forEach((period) => {
+    if (!period.open || !period.close) {
+      return undefined;
+    }
   });
 
-  /** @type {number} 0-6 representing Sunday-Saturday. */
-  const requestedDayOfWeek = date.getDay();
-  /** @type {Time} hours and minutes of the given date. */
-  const requestedTime = Time.createFromDate(date);
+  const requestedTime = Time.createFromRequestedTime(date);
 
-  // TODO Generate ranges for each day from the place data (in UTC).
-  // TODO Check whether utcHour+utcMinute is in any of the ranges for utcDay.
-
-  return undefined;
+  /** @type{Array<Range>} */
+  const timeRanges = Range.createRangesFrom(periods, utcOffset);
+  return timeRanges.some(
+      (range) => {
+        return range.isInRange(requestedTime);
+      });
 };
 
 /**
@@ -100,7 +93,7 @@ const isAlwaysOpen = (periods) => {
     periods.length === 1 &&
       !periods[0].hasOwnProperty('close') &&
       periods[0].hasOwnProperty('open') &&
-      periods[0].open.day === dayOfWeek['Sunday'] &&
+      periods[0].open.day === 0 &&
       periods[0].open.time === '0000'
   );
 };

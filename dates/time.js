@@ -19,102 +19,178 @@ const mainTime = () => {
 };
 
 const testTime = () => {
-  const t1 = Time.createFromString('1000');
-  const t2 = Time.createFromString('1200');
-  console.log('t1: ', t1);
-  console.log('t2: ', t2);
-  console.log('0  t1 compare to t1: ', t1.compare(t1));
-  console.log('-1 t1 compare to t2: ', t1.compare(t2));
-  console.log('1  t2 compare to t1: ', t2.compare(t1));
-  console.log(
-      '-1 t1 compare to 1700',
-      t1.compare(Time.createFromString('1700'))
-  );
-  console.log(
-      '1  t1 compare to 0000',
-      t1.compare(Time.createFromString('0000'))
-  );
-  console.log(
-      '-1 t1 compare to 1159',
-      t1.compare(Time.createFromString('1159'))
-  );
-  console.log(
-      '-1 t1 compare to 2359',
-      t1.compare(Time.createFromString('2359'))
-  );
-  const now = Time.createFromDate();
-  console.log('now: ', now);
-  console.log('1  t1 compare to now', t1.compare(now));
+  // Machine's timezone (converted to UTC).
+  {
+    const date = new Date();
+    const minutes = (date.getUTCDay() * 24 * 60) +
+        (date.getUTCHours() * 60) +
+        date.getUTCMinutes();
+
+    const timeNow = Time.createFromRequestedTime(date);
+    console.log(timeNow);
+    console.assert(
+        timeNow.timeInMinutes === minutes,
+        'failed to handle local time to UTC'
+    );
+  }
+
+  // Pacific Time (Mountain View).
+  {
+    const testData = {
+      openingHoursTime: {day: 0, time: '1205'},
+      utcOffset: -420,
+    };
+    const time = Time.createFromOpeningHoursTime(
+        testData.openingHoursTime,
+        testData.utcOffset
+    );
+    console.log(time);
+    console.assert(
+        time.timeInMinutes === 1145,
+        'failed to handle utcOffset -420'
+    );
+  }
+
+  // Sydney Time (UNDER FLOW).
+  {
+    const testData = {
+      openingHoursTime: {day: 0, time: '0610'},
+      utcOffset: 600,
+    };
+    const time = Time.createFromOpeningHoursTime(
+        testData.openingHoursTime,
+        testData.utcOffset
+    );
+    console.log(time);
+    console.assert(
+        time.timeInMinutes === 9850,
+        'failed to handle utcOffset 600'
+    );
+  }
+
+  // Pacific Time (OVER FLOW).
+  {
+    const testData = {
+      openingHoursTime: {day: 6, time: '2310'},
+      utcOffset: -420,
+    };
+    const time = Time.createFromOpeningHoursTime(
+        testData.openingHoursTime,
+        testData.utcOffset
+    );
+    console.log(time);
+    console.assert(
+        time.timeInMinutes === 370,
+        'failed to handle utcOffset -420'
+    );
+  }
 };
 
 /**
- * Simple wrapper for a time expressed in "hhmm". Allows other times to be
- * compared to it.
+ * Time is represented by 3 things:
+ * 1) day of week
+ * 2) hours
+ * 3) minutes.
+ *
+ * Based on these 3 things, the number of minutes are calculated that represent
+ * this time on a scale that can have only 7 days. So the minimum is 0
+ * minutes, and maximum is 10080 minutes (7d x 24h x 60m).
+ *
+ * This class allows other time objects to be compared to it.
+ *
+ * The static factory methods convert the given Date or OpeningHoursTime +
+ * utcOffset into UTC time and then convert them into minutes that fit on this
+ * scale (from 0 to 10080).
  */
 class Time {
   /**
-   * @param {string} timeString Formatted as "hhmm".
+   * Note `utc_offset` is in minutes, but is not the same as the JavaScript
+   * Date. It is defined as the number of minutes
+   * from: UTC
+   * to: current locale
+   * - PT is -7 hours from UTC
+   * - utc_offset = -420 (-7hr)
+   * - Given a date in PT locale, where hour = 13, in order to get the UTC
+   *   time, we have to **subtract** this offset. So UTC hour is 20.
+   *
+   * From the docs:
+   * The offset from UTC of the Place’s current timezone, in minutes. For
+   * example, Sydney, Australia in daylight savings is 11 hours ahead of
+   * UTC, so the <code>utc_offset</code> will be <code>660</code>. For
+   * timezones behind UTC, the offset is negative. For example, the </code>
+   * is <code>-60</code> for Cape Verde.
+   *
+   * @param {Object} openingHoursTime Open or close openingHoursTime contains
+   *     day (number) and time (string) properties.
+   * @param {number} utcOffset
    * @return {Time}
    */
-  static createFromString(timeString) {
+  static createFromOpeningHoursTime(openingHoursTime, utcOffset) {
+    /** @type {number} */
+    const day = openingHoursTime.day;
+    /** @type {string} */
+    const timeString = openingHoursTime.time;
+
     const hours = parseInt(timeString.substring(0, 2), 10);
     const minutes = parseInt(timeString.substring(2, 4), 10);
-    return new Time(hours, minutes);
+
+    let utcTimeInMinutes = (day * 24 * 60) + (hours * 60) + minutes - utcOffset;
+
+    if (utcTimeInMinutes < this.getMinTime()) {
+      utcTimeInMinutes = this.getMaxTime() - Math.abs(utcTimeInMinutes);
+    } else if (utcTimeInMinutes > this.getMaxTime()) {
+      utcTimeInMinutes = (utcTimeInMinutes - this.getMaxTime());
+    }
+
+    return new Time(utcTimeInMinutes);
   }
 
   /**
-   * @param {Date=} date If this isn't passed, it creates a new Date().
+   * @return {number}
+   */
+  static getMaxTime() {
+    return 10080;
+  }
+
+  /**
+   * @return {number}
+   */
+  static getMinTime() {
+    return 0;
+  }
+
+  /**
+   * @param {Date} date
    * @return {Time}
    */
-  static createFromDate(date = null) {
-    if (!date) {
-      date = new Date();
-    }
-    return new Time(date.getHours(), date.getMinutes());
+  static createFromRequestedTime(date = new Date()) {
+    const utcDay = date.getUTCDay();
+    const utcHours = date.getUTCHours();
+    const utcMinutes = date.getUTCMinutes();
+    return new Time((utcDay * 24 * 60) + (utcHours * 60) + utcMinutes);
   }
 
   /**
-   * @param {number} hours
-   * @param {number} minutes
+   * @param {number} timeInMinutes
    */
-  constructor(hours, minutes) {
+  constructor(timeInMinutes) {
     /**
      * @type {number}
      */
-    this.hours = hours;
-    /**
-     * @type {number}
-     */
-    this.minutes = minutes;
-    /**
-     * @type {number}
-     */
-    this.timeInMinutes =
-        this.hours * 60 + this.minutes;
+    this.timeInMinutes = timeInMinutes;
   }
 
   /**
+   * Compares the given time in to the `this.timeInMinutes` and returns:
+   * 1) 0 if equal,
+   * 2) -1 if it's less,
+   * 3) +1 if it's greater.
+   *
    * @param {Time} time
    * @return {number}
    */
   compare(time) {
-    return this.compare_(
-        time.hours,
-        time.minutes
-    );
-  }
-
-  /**
-   * Compares the given time in `hours` and `minutes` to the
-   * `this.timeInMinutes` and returns 0 if equal, -1 if it's less, and +1 if
-   * it's greater.
-   * @param {number} hours
-   * @param {number} minutes
-   * @return {number}
-   * @private
-   */
-  compare_(hours, minutes) {
-    const timeInMinutes = hours * 60 + minutes;
+    const timeInMinutes = time.timeInMinutes;
     if (this.timeInMinutes === timeInMinutes) {
       return 0;
     } else if (this.timeInMinutes < timeInMinutes) {
