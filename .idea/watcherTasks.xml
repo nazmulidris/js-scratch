@@ -14,15 +14,52 @@
         <array />
       </option>
       <option name="outputFromStdout" value="true" />
-      <option name="program" value="/usr/local/bin/prettier" />
+      <option name="program" value="/usr/bin/prettier" />
       <option name="runOnExternalChanges" value="false" />
       <option name="scopeName" value="All Places" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
-    <enabled-global>
-      <option value="prettier (HTML)" />
-    </enabled-global>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="$FilePath$ --write" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="md" />
+      <option name="immediateSync" value="false" />
+      <option name="name" value="prettier (MD)" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="true" />
+      <option name="program" value="/usr/bin/prettier" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="All Places" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$FileDir$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="$FilePath$ --write" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="html" />
+      <option name="immediateSync" value="false" />
+      <option name="name" value="prettier (HTML)" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="true" />
+      <option name="program" value="/usr/bin/prettier" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="All Places" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$FileDir$" />
+      <envs />
+    </TaskOptions>
   </component>
 </project>
