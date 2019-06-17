@@ -19,6 +19,17 @@ const main = () => {
   Object.defineProperty(obj, 'prop1', {
     enumerable: true,
     get: ()=>{
+      // No longer has access to `this` since arrow function is used, which
+      // binds `this` to `lexical this`.
+      console.log('⭐ prop1 access');
+      return 'prop1-value';
+    },
+  });
+
+  Object.defineProperty(obj, 'prop2', {
+    enumerable: true,
+    get() {
+      // Has access to `this` since method syntax is used.
       console.log('⭐ prop1 access');
       return 'prop1-value';
     },
