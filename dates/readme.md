@@ -1,8 +1,3 @@
-# Range
-
-- https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Range.html
-- https://github.com/google/guava/wiki/RangesExplained
-
 # Notes
 
 - https://www.timeanddate.com/time/map/
