@@ -104,14 +104,10 @@ const testTime = () => {
  */
 class Time {
   /**
-   * Note `utc_offset` is in minutes, but is not the same as the JavaScript
-   * Date. It is defined as the number of minutes
-   * from: UTC
-   * to: current locale
-   * - PT is -7 hours from UTC
-   * - utc_offset = -420 (-7hr)
-   * - Given a date in PT locale, where hour = 13, in order to get the UTC
-   *   time, we have to **subtract** this offset. So UTC hour is 20.
+   * Note `utc_offset` is in minutes and is used to convert UTC time to local
+   * time. That is, UTC time + utc_offset = local time.
+   *
+   * Given local time and utc_offset, UTC time = local time - utc_offset.
    *
    * From the docs:
    * The offset from UTC of the Place’s current timezone, in minutes. For
