@@ -33,7 +33,7 @@ const testRange = () => {
     }];
     const ranges = Range.createRangesFrom(data, -420);
     console.assert(ranges.length === 2,
-        'failed to split ranges that spill over Time.MAX boundary');
+        'failed to split ranges that spill over TimeOfWeek.MAX boundary');
   }
 
   // Spanning 3days.
@@ -44,8 +44,8 @@ const testRange = () => {
       utcOffset: -420,
     };
     const range = new Range(
-        Time.createFromOpeningHoursTime(data.open, data.utcOffset),
-        Time.createFromOpeningHoursTime(data.close, data.utcOffset));
+        TimeOfWeek.createFromOpeningHoursTime(data.open, data.utcOffset),
+        TimeOfWeek.createFromOpeningHoursTime(data.close, data.utcOffset));
     console.assert(range.startTime.timeInMinutes === 905,
         'problem w/ range start time');
     console.assert(range.endTime.timeInMinutes === 4110,
@@ -54,7 +54,7 @@ const testRange = () => {
 
     // Monday @ 2.25pm, should be in range.
     {
-      const time = Time.createFromRequestedTime(
+      const time = TimeOfWeek.createFromRequestedTime(
           new Date('June 17 2019 2:25 pm'));
       console.assert(range.isInRange(time),
           `${time} should be in the range!`);
@@ -62,7 +62,7 @@ const testRange = () => {
 
     // Thursday @ 2.25pm, should not be in range.
     {
-      const time = Time.createFromRequestedTime(
+      const time = TimeOfWeek.createFromRequestedTime(
           new Date('June 20 2019 2:25 pm'));
       console.assert(!range.isInRange(time),
           `${time} should not be in the range!`);
@@ -88,15 +88,19 @@ class Range {
     periods.forEach((period) => {
       const {open, close} = period;
       const range = new Range(
-          Time.createFromOpeningHoursTime(open, utcOffset),
-          Time.createFromOpeningHoursTime(close, utcOffset)
+          TimeOfWeek.createFromOpeningHoursTime(open, utcOffset),
+          TimeOfWeek.createFromOpeningHoursTime(close, utcOffset)
       );
 
       // startTime (2) > endTime (1) ||
       // endTime (1) < startTime (2)
       if (range.endTime.compare(range.startTime) < 0) {
-        const range1 = new Range(range.startTime, new Time(Time.getMaxTime()));
-        const range2 = new Range(new Time(Time.getMinTime()), range.endTime);
+        const range1 = new Range(
+            range.startTime,
+            new TimeOfWeek(TimeOfWeek.getMaxTime()));
+        const range2 = new Range(
+            new TimeOfWeek(TimeOfWeek.getMinTime()),
+            range.endTime);
         timeRanges.push(range1);
         timeRanges.push(range2);
       } else {
@@ -108,22 +112,22 @@ class Range {
   }
 
   /**
-   * @param {Time} startTime
-   * @param {Time} endTime
+   * @param {TimeOfWeek} startTime
+   * @param {TimeOfWeek} endTime
    */
   constructor(startTime, endTime) {
     /**
-     * @type {Time}
+     * @type {TimeOfWeek}
      */
     this.startTime = startTime;
     /**
-     * @type {Time}
+     * @type {TimeOfWeek}
      */
     this.endTime = endTime;
   }
 
   /**
-   * @param {Time} givenTime
+   * @param {TimeOfWeek} givenTime
    * @return {boolean}
    */
   isInRange(givenTime) {

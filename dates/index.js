@@ -74,7 +74,7 @@ const isOpen = (place, date = new Date()) => {
     }
   });
 
-  const requestedTime = Time.createFromRequestedTime(date);
+  const requestedTime = TimeOfWeek.createFromRequestedTime(date);
 
   /** @type{Array<Range>} */
   const timeRanges = Range.createRangesFrom(periods, utcOffset);

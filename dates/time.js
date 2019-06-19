@@ -26,7 +26,7 @@ const testTime = () => {
         (date.getUTCHours() * 60) +
         date.getUTCMinutes();
 
-    const timeNow = Time.createFromRequestedTime(date);
+    const timeNow = TimeOfWeek.createFromRequestedTime(date);
     console.log(timeNow);
     console.assert(
         timeNow.timeInMinutes === minutes,
@@ -34,13 +34,13 @@ const testTime = () => {
     );
   }
 
-  // Pacific Time (Mountain View).
+  // Pacific TimeOfWeek (Mountain View).
   {
     const testData = {
       openingHoursTime: {day: 0, time: '1205'},
       utcOffset: -420,
     };
-    const time = Time.createFromOpeningHoursTime(
+    const time = TimeOfWeek.createFromOpeningHoursTime(
         testData.openingHoursTime,
         testData.utcOffset
     );
@@ -51,13 +51,13 @@ const testTime = () => {
     );
   }
 
-  // Sydney Time (UNDER FLOW).
+  // Sydney TimeOfWeek (UNDER FLOW).
   {
     const testData = {
       openingHoursTime: {day: 0, time: '0610'},
       utcOffset: 600,
     };
-    const time = Time.createFromOpeningHoursTime(
+    const time = TimeOfWeek.createFromOpeningHoursTime(
         testData.openingHoursTime,
         testData.utcOffset
     );
@@ -68,13 +68,13 @@ const testTime = () => {
     );
   }
 
-  // Pacific Time (OVER FLOW).
+  // Pacific TimeOfWeek (OVER FLOW).
   {
     const testData = {
       openingHoursTime: {day: 6, time: '2310'},
       utcOffset: -420,
     };
-    const time = Time.createFromOpeningHoursTime(
+    const time = TimeOfWeek.createFromOpeningHoursTime(
         testData.openingHoursTime,
         testData.utcOffset
     );
@@ -87,7 +87,7 @@ const testTime = () => {
 };
 
 /**
- * Time is represented by 3 things:
+ * TimeOfWeek is represented by 3 things:
  * 1) day of week
  * 2) hours
  * 3) minutes.
@@ -102,7 +102,7 @@ const testTime = () => {
  * utcOffset into UTC time and then convert them into minutes that fit on this
  * scale (from 0 to 10080).
  */
-class Time {
+class TimeOfWeek {
   /**
    * Note `utc_offset` is in minutes and is used to convert UTC time to local
    * time. That is, UTC time + utc_offset = local time.
@@ -119,7 +119,7 @@ class Time {
    * @param {Object} openingHoursTime Open or close openingHoursTime contains
    *     day (number) and time (string) properties.
    * @param {number} utcOffset
-   * @return {Time}
+   * @return {TimeOfWeek}
    */
   static createFromOpeningHoursTime(openingHoursTime, utcOffset) {
     /** @type {number} */
@@ -138,7 +138,7 @@ class Time {
       utcTimeInMinutes = (utcTimeInMinutes - this.getMaxTime());
     }
 
-    return new Time(utcTimeInMinutes);
+    return new TimeOfWeek(utcTimeInMinutes);
   }
 
   /**
@@ -157,13 +157,13 @@ class Time {
 
   /**
    * @param {Date} date
-   * @return {Time}
+   * @return {TimeOfWeek}
    */
   static createFromRequestedTime(date = new Date()) {
     const utcDay = date.getUTCDay();
     const utcHours = date.getUTCHours();
     const utcMinutes = date.getUTCMinutes();
-    return new Time((utcDay * 24 * 60) + (utcHours * 60) + utcMinutes);
+    return new TimeOfWeek((utcDay * 24 * 60) + (utcHours * 60) + utcMinutes);
   }
 
   /**
@@ -182,7 +182,7 @@ class Time {
    * 2) -1 if it's less,
    * 3) +1 if it's greater.
    *
-   * @param {Time} time
+   * @param {TimeOfWeek} time
    * @return {number}
    */
   compare(time) {
