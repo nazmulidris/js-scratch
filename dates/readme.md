@@ -1,5 +1,7 @@
 # Notes
 
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+
 - https://www.timeanddate.com/time/map/
 
 - JavaScript Date defines `getTimezoneOffset()` as the number of minutes
@@ -15,6 +17,9 @@
   defined as the number of minutes
   from: UTC
   to: current locale
+
+  - UTC time + UTC offset = local time.
+    And, given local time and UTC offset, UTC time = local time - UTC offset.
 
   - CA/PT is -7 hours from UTC
 

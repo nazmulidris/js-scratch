@@ -55,7 +55,8 @@ const testRange = () => {
     // Monday @ 2.25pm, should be in range.
     {
       const time = TimeOfWeek.createFromRequestedTime(
-          new Date('June 17 2019 2:25 pm'));
+          // June 17 2019 2:25 pm PDT
+          new Date('17 June 2019 14:25 PDT'));
       console.assert(range.isInRange(time),
           `${time} should be in the range!`);
     }
@@ -63,7 +64,8 @@ const testRange = () => {
     // Thursday @ 2.25pm, should not be in range.
     {
       const time = TimeOfWeek.createFromRequestedTime(
-          new Date('June 20 2019 2:25 pm'));
+          // June 20 2019 2:25 pm
+          new Date('20 June 2019 14:25 PDT'));
       console.assert(!range.isInRange(time),
           `${time} should not be in the range!`);
     }
