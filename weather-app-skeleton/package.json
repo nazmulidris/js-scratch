@@ -1,0 +1,19 @@
+{
+  "name": "tmp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --devtool source-map --mode=development",
+    "watch": "webpack --watch --mode=development",
+    "start": "webpack-dev-server --devtool source-map --mode development --content-base dist --hot"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+  }
+}
