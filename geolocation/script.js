@@ -16,11 +16,13 @@
 
 // Main entry point.
 const main = () => {
+  checkPermissions();
+  
   assertGeolocationIsAvailable();
   document.getElementById('currentPositionPromise')
-          .addEventListener("click", currentPositionPromiseButtonHandler);
+          .addEventListener('click', currentPositionPromiseButtonHandler);
   document.getElementById('currentPositionAsync')
-          .addEventListener("click", currentPositionAsyncButtonHandler);
+          .addEventListener('click', currentPositionAsyncButtonHandler);
 };
 
 const currentPositionAsyncButtonHandler = async () => {
@@ -34,6 +36,28 @@ const currentPositionAsyncButtonHandler = async () => {
 };
 
 /**
+ * https://developer.mozilla.org/en-US/docs/Web/API/PermissionStatus
+ * https://developers.google.com/web/updates/2015/04/permissions-api-for-the-web
+ */
+const checkPermissions = () => {
+  navigator.permissions &&
+  navigator.permissions
+           .query({name: 'geolocation'})
+           .then((permissionStatus) => {
+             console.log(permissionStatus);
+             if (permissionStatus.state === 'granted') {
+               window.alert("Permission granted");
+               navigator.geolocation.getCurrentPosition(
+                   (position) => {
+                     console.log(position);
+                     /* You can use this position without prompting the user if
+                     the permission had already been granted */
+                   });
+             }
+           });
+};
+
+/**
  * This function doesn't work, because it returns immediately before the
  * getCurrentPosition() method returns anything. Calling this function will
  * always return undefined.
@@ -42,7 +66,7 @@ const invokeGetCurrentPositionAsync = async () => {
   const options = {
     enableHighAccuracy: true,
     timeout: 30000,
-    maximumAge: 0
+    maximumAge: 0,
   };
   window.navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -60,13 +84,13 @@ const invokeGetCurrentPositionAsync = async () => {
 // https://stackoverflow.com/a/44439358/2085356
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 /**
- * @returns {Promise<Position>}
+ * @return {Promise<Position>}
  */
 const invokeGetCurrentPositionPromise = () => {
   const options = {
     enableHighAccuracy: true,
     timeout: 30000,
-    maximumAge: 0
+    maximumAge: 0,
   };
   return new Promise((resolve, reject) => {
     window.navigator.geolocation.getCurrentPosition(resolve, reject, options);
@@ -116,7 +140,7 @@ const getLatLngFromPosition = (position) => {
 };
 const assertGeolocationIsAvailable = () => {
   if (window.navigator.geolocation) return;
-  const message = "window.navigator.geolocation is not available";
+  const message = 'window.navigator.geolocation is not available';
   console.error(message);
   window.alert(message);
   throw new Error(message);
