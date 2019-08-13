@@ -11,3 +11,5 @@
 - https://www.toptal.com/designers/subtlepatterns/tag/paper/
 - https://vlad-saling.github.io/star-trek-ipsum/
 - https://stackoverflow.com/a/16771324
+- https://developer.mozilla.org/en-US/docs/Web/CSS/@media
+- https://alligator.io/css/media-queries/
