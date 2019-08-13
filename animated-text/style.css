@@ -23,23 +23,27 @@
 }
 
 body {
+  display: flex;
   background-image: url("papyrus.png");
   font-family: "Fira Sans", sans-serif;
-  height: 100%;
 }
 
 .content-container {
-  height: 100%;
+  flex: 1;
   display: flex;
   justify-content: center;
 }
 
 .content {
   padding: var(--content-padding);
-  flex: 1 1 auto;
+  flex: 1;
   max-width: 700px;
   min-width: 320px;
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+.content p {
+  padding: calc(var(--content-padding) / 4);
 }
 
 .title {

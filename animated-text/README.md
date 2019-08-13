@@ -9,3 +9,5 @@
 - https://stackoverflow.com/questions/23090136/how-can-i-make-my-flexbox-layout-take-100-vertical-space
 - https://css-tricks.com/snippets/html/responsive-meta-tag/
 - https://www.toptal.com/designers/subtlepatterns/tag/paper/
+- https://vlad-saling.github.io/star-trek-ipsum/
+- https://stackoverflow.com/a/16771324
