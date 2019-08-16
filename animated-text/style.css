@@ -76,7 +76,7 @@ body {
   -webkit-background-clip: text;
   color: transparent;
   background-size: 300%;
-  animation: bg-animation 25s infinite alternate;
+  animation: bg-animation 5s infinite alternate;
 }
 
 @keyframes bg-animation {
