@@ -1,6 +1,5 @@
-This repo contains [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML),
-[JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript), and
-[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) experiments.
+This repo contains [HTML](https://tinyurl.com/m8qyg6l), [JS](https://tinyurl.com/m9lqjhu), and
+[CSS](https://tinyurl.com/kja33aj) experiments.
 
 Tools used
 
